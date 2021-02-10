@@ -35,6 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'rowOptions' => function($model){
                         return ['data-id' => $model->id];
                     },
+                    'tableOptions' => [
+                        'class' => 'table-hover',
+                        'style' => 'cursor: pointer;'
+                    ],
                     'columns' => [
                         [
                             'attribute' => 'id',

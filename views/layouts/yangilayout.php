@@ -211,6 +211,7 @@ $title = Yii::t('app', 'Are you sure?');
 $text = Yii::t('app', 'You won`t be able to revert this!');
 $delete = Yii::t('app', 'Delete');
 $cancel = Yii::t('app', 'Cancel');
+$goto = Url::to(['details/index']);
 $js = <<<JS
    $('body').delegate('.delete-button-ajax','click',function (event){
       event.preventDefault();
@@ -249,6 +250,45 @@ $js = <<<JS
           }
         })
     });
+   $('body').delegate('.delete-with-ajax','click',function (event){
+      event.preventDefault();
+      let url = $(this).attr('href');
+      swal({
+          title: '$title',
+          text: '$text',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: '$delete',
+          cancelButtonText: '$cancel',
+          padding: '2em'
+        }).then(function(result) {
+          if (result.value) {    
+              $.ajax({
+                    url: url,
+                    type: "POST",
+                    success: function (res) {
+                        if (res['status'] === 'true') {
+                            location.reload('$goto');
+                            swal({
+                                title: res['saved_one'],
+                                text: res['saved'],
+                                type: 'success',
+                                timer: 20000,
+                                timerProgressBar: true
+                            });
+                        } else {
+                            swal(
+                              res['error_one'],
+                              res['error'],
+                              'warning'
+                            )
+                        }
+                    }
+              });
+          }
+        })
+    });
+
 JS;
 $this->registerJs($js);
 $flash = Yii::$app->session;

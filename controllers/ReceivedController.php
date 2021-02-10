@@ -108,9 +108,12 @@ class ReceivedController extends BaseController
             }
         }
         $data = Received::find()->where(['details_id' => $id])->all();
+        if(empty($data)){
+            return $this->redirect(['details/index']);
+        }
         $details = Details::findOne(['id' => $id]);
         $models = [new Received()];
-        $hideIt = $details->status === $details::STATUS_ACTIVE ? false : true;
+        $hideIt = ($details->status === $details::STATUS_ACTIVE) ? false : true;
         return $this->render('info', ['data' => $data, 'models' => $models, 'details' => $details, 'hideIt' => $hideIt]);
     }
     public function actionInformation($id){
@@ -539,14 +542,19 @@ class ReceivedController extends BaseController
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
         $isAjax = Yii::$app->request->isAjax;
-        $session = Yii::$app->session;
         Yii::$app->response->format = Response::FORMAT_JSON;
-        if($model && $isAjax){
-            $isSavedAndFinished = Details::findOne(['status' => Details::STATUS_ACTIVE]);
+        if($isAjax){
+            $isActive = Details::findOne(['status' => Details::STATUS_ACTIVE, 'id' => $id]);
+            if($isActive !== null){
+                if(Received::deleteAll(['details_id' => $id])){
+                    if($isActive->delete()){
+                        return Received::getResult(true);
+                    }
+                }
+            }
         }
-        return $model;
+        return Received::getResult(false);
     }
 
     /**

@@ -32,9 +32,8 @@ $summa = 0;
                 ]) ?>
                 <?php else:?>
                     <?= Html::a('O\'chirish', ['received/delete', 'id' => $data[0]->details->id], [
-                        'class' => 'btn btn-success p-1 delete-button-ajax',
+                        'class' => 'btn btn-success p-1 delete-with-ajax',
                         'style' => 'font-size:12px;',
-                        'data-method' => 'POST'
                     ]) ?>
                     <?= Html::a('Taxrirlash', ['received/multiple-update', 'id' => $data[0]->details->id], ['class' => 'btn btn-success p-1',
                         'style' => 'font-size:12px;',

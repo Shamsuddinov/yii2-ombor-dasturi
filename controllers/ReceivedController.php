@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\models\Details;
 use app\models\ProductBalance;
 use app\models\ReceiveForm;
+use http\Url;
 use Yii;
 use app\models\Received;
 use app\models\ReceivedSearch;
@@ -109,7 +110,7 @@ class ReceivedController extends BaseController
         }
         $data = Received::find()->where(['details_id' => $id])->all();
         if(empty($data)){
-            return $this->redirect(['details/index']);
+            return $this->redirect(\yii\helpers\Url::to(['details/index']));
         }
         $details = Details::findOne(['id' => $id]);
         $models = [new Received()];

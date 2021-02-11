@@ -33,9 +33,10 @@ class Details extends BaseModel
         parent::rules();
         return [
             [['date'], 'safe'],
-            [['contragent_id', 'status'], 'integer'],
+            [['contragent_id', 'status', 'department_id'], 'integer'],
             [['sum'], 'number'],
             [['contragent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Contragent::className(), 'targetAttribute' => ['contragent_id' => 'id']],
+            [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
         ];
     }
 
@@ -61,7 +62,10 @@ class Details extends BaseModel
     {
         return $this->hasOne(Contragent::className(), ['id' => 'contragent_id']);
     }
-
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::className(), ['id' => 'department_id']);
+    }
     /**
      * Gets query for [[Receiveds]].
      *

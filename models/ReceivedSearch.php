@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Received;
+use yii\data\ArrayDataProvider;
 
 /**
  * ReceivedSearch represents the model behind the search form of `app\models\Received`.
@@ -41,76 +42,136 @@ class ReceivedSearch extends Received
      *
      * @param array $params
      *
-     * @return ActiveDataProvider
+     * @return ArrayDataProvider
      */
-    public function search($params)
+    public function search($params, $isArray = false)
     {
+        if($isArray){
+            $query = Received::find()
+                ->joinWith(['product', 'details.contragent', 'details.department'])
+                ->asArray();
+            $this->load($params);
+            $query->andFilterWhere(['between', 'date', $this->from_date, $this->to_date]);
+            $query->andFilterWhere([
+                'received.id' => $this->id,
+                'receiver_id' => $this->receiver_id,
+                'product_id' => $this->product_id,
+                'r.quantity' => $this->quantity,
+                'r.r_price' => $this->r_price,
+                'contragent_id' => $this->contragent_id
+            ]);
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $query->all(),
+                'pagination' => false,
+                'sort' => [
+                    'defaultOrder' => [
+//                        'date_for_search' => SORT_DESC,
+                        'details_id' => SORT_DESC,
+                    ],
+                    'attributes' => [
+                        'product_id' => [
+                            'asc' => ['product.name' => SORT_ASC, 'details.date' => SORT_DESC],
+                            'desc' => ['product.name' => SORT_DESC, 'details.date' => SORT_DESC],
+                        ],
+                        'contragent_id' => [
+                            'asc' => ['details.contragent.name' => SORT_ASC],
+                            'desc' => ['details.contragent.name' => SORT_DESC],
+                        ],
+                        'date_for_search' => [
+                            'asc' => ['details.date' => SORT_ASC],
+                            'desc' => ['details.date' => SORT_DESC],
+                        ],
+                        'r_price' => [
+                            'asc' => ['r_price' => SORT_ASC, 'details.date' => SORT_DESC],
+                            'desc' => ['r_price' => SORT_DESC, 'details.date' => SORT_DESC],
+                        ],
+                        'quantity' => [
+                            'asc' => ['quantity' => SORT_DESC, 'details.date' => SORT_DESC],
+                            'desc' => ['quantity' => SORT_ASC, 'details.date' => SORT_DESC],
+                        ],
+                        'details_id' => [
+                            'asc' => ['details_id' => SORT_ASC, 'date' => SORT_DESC],
+                            'desc' => ['details_id' => SORT_DESC, 'date' => SORT_DESC],
+                        ]
+                    ],
+                ]
+            ]);
 
-        $query = Received::find()->select(['r.*', 'd.date as date', 'product.name as name', 'c.id as contr', 'c.name as contragent'])
-            ->alias('r')
-            ->leftJoin('details d', 'd.id = r.details_id')
-            ->leftJoin('product', 'product.id = r.product_id')
-            ->leftJoin('contragent c', 'c.id = d.contragent_id');
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => false,
-            'sort' => [
-                'defaultOrder' => [
+            if (!$this->validate()) {
+                // uncomment the following line if you do not want to return any records when validation fails
+                // $query->where('0=1');
+                return $dataProvider;
+            }
+//            echo "<pre>";
+//            print_r($query->createCommand()->getRawSql());
+//            echo "</pre>";
+//            exit();
+            return $dataProvider;
+        } else {
+            $query = Received::find()->select(['r.*', 'd.date as date','product.name as name', 'c.id as contr', 'c.name as contragent'])
+                ->alias('r')
+                ->leftJoin('details d', 'd.id = r.details_id')
+                ->leftJoin('product', 'product.id = r.product_id')
+                ->leftJoin('contragent c', 'c.id = d.contragent_id');
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => false,
+                'sort' => [
+                    'defaultOrder' => [
 //                    'date_for_search' => SORT_DESC,
-                    'details_id' => SORT_DESC,
-                ],
-                'attributes' => [
-                    'product_id' => [
-                        'asc' => ['name' => SORT_ASC, 'date' => SORT_DESC],
-                        'desc' => ['name' => SORT_DESC, 'date' => SORT_DESC],
+                        'details_id' => SORT_DESC,
                     ],
-                    'details_id' => [
-                        'asc' => ['details_id' => SORT_ASC, 'date' => SORT_DESC],
-                        'desc' => ['details_id' => SORT_DESC, 'date' => SORT_DESC],
+                    'attributes' => [
+                        'product_id' => [
+                            'asc' => ['name' => SORT_ASC, 'date' => SORT_DESC],
+                            'desc' => ['name' => SORT_DESC, 'date' => SORT_DESC],
+                        ],
+                        'details_id' => [
+                            'asc' => ['details_id' => SORT_ASC, 'date' => SORT_DESC],
+                            'desc' => ['details_id' => SORT_DESC, 'date' => SORT_DESC],
+                        ],
+                        'contragent_id' => [
+                            'asc' => ['c.name' => SORT_ASC],
+                            'desc' => ['c.name' => SORT_DESC],
+                        ],
+                        'date_for_search' => [
+                            'asc' => ['date' => SORT_ASC],
+                            'desc' => ['date' => SORT_DESC],
+                        ],
+                        'r_price' => [
+                            'asc' => ['r_price' => SORT_ASC, 'date' => SORT_DESC],
+                            'desc' => ['r_price' => SORT_DESC, 'date' => SORT_DESC],
+                        ],
+                        'quantity' => [
+                            'asc' => ['quantity' => SORT_DESC, 'date' => SORT_DESC],
+                            'desc' => ['quantity' => SORT_ASC, 'date' => SORT_DESC],
+                        ],
                     ],
-                    'contragent_id' => [
-                        'asc' => ['c.name' => SORT_ASC],
-                        'desc' => ['c.name' => SORT_DESC],
-                    ],
-                    'date_for_search' => [
-                        'asc' => ['date' => SORT_ASC],
-                        'desc' => ['date' => SORT_DESC],
-                    ],
-                    'r_price' => [
-                        'asc' => ['r_price' => SORT_ASC, 'date' => SORT_DESC],
-                        'desc' => ['r_price' => SORT_DESC, 'date' => SORT_DESC],
-                    ],
-                    'quantity' => [
-                        'asc' => ['quantity' => SORT_DESC, 'date' => SORT_DESC],
-                        'desc' => ['quantity' => SORT_ASC, 'date' => SORT_DESC],
-                    ],
-                ],
-            ]
-        ]);
-
-
-        $this->load($params);
+                ]
+            ]);
+            $this->load($params);
 //        $this->setAttributes([
 //           'from_date' =>
 //        ]);
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+            if (!$this->validate()) {
+                // uncomment the following line if you do not want to return any records when validation fails
+                // $query->where('0=1');
+                return $dataProvider;
+            }
+            // grid filtering conditions
+            $query->andFilterWhere([
+                'id' => $this->id,
+                'receiver_id' => $this->receiver_id,
+                'product_id' => $this->product_id,
+                'r.quantity' => $this->quantity,
+                'r.r_price' => $this->r_price,
+                'contragent_id' => $this->contragent_id
+            ]);
+
+            $query->andFilterWhere(['between', 'date', $this->from_date, $this->to_date]);
+
             return $dataProvider;
         }
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'receiver_id' => $this->receiver_id,
-            'product_id' => $this->product_id,
-            'r.quantity' => $this->quantity,
-            'r.r_price' => $this->r_price,
-            'contragent_id' => $this->contragent_id
-        ]);
 
-        $query->andFilterWhere(['between', 'date', $this->from_date, $this->to_date]);
-
-        return $dataProvider;
     }
 }

@@ -1,15 +1,12 @@
 <?php
-
-use app\models\Received;
-use kartik\date\DatePicker;
 use yii\helpers\Html;
-//use yii\grid\GridView;
-use kartik\grid\GridView;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
+/* @var $all_items - bir narsalar */
+/* @var $sort - bir narsalar */
+/* @var $total_count - jami elementlar */
+/* @var $count - sahifadagi elementlar soni */
 /* @var $searchModel app\models\ReceivedSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Mahsulotlarni qabul qilish';
 $this->params['breadcrumbs'][] = $this->title;
@@ -20,81 +17,36 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box-title"><?= Html::encode($this->title) ?></div>
 
             <!--        --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
-            <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+            <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
         </div>
-
+        <p class="text-dark pl-4">
+            Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
+        </p>
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body pt-0">
-                    <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
-//                        'filterModel' => $searchModel,
-                        'tableOptions' => [
-                            'id' => 'bootstrap-data-table',
-                            'class' => 'table table-striped table-bordered table-hover',
-                        ],
-                        'rowOptions' => [
-                            'class' => 'received-table-row'
-                        ],
-                        'headerRowOptions' => [
-                            'class' => 'table-header',
-                        ],
-                        'summary' => "<b>{totalCount} ta</b> ma'lumotdan. <b>{begin} - {end} gacha</b> qismi chiqarildi.",
-                        'columns' => [
-                            [
-                                'attribute' => 'contragent_id',
-                                'label' => 'Yetkazib beruvchi',
-                                'value' => 'details.contragent.name',
-
-                            ],
-                            [
-                                'attribute' => 'product_id',
-                                'label' => 'Mahsulot nomi',
-                                'value' => 'product.name'
-                            ],
-                            [
-                                'attribute' => 'quantity',
-                                'label' => 'Soni',
-                                'headerOptions' => [
-                                    'style' => 'width: 90px; max-width:110px; text-align:center;'
-                                ],
-                                'contentOptions' => [
-                                    'style' => 'text-align:center;'
-                                ]
-                            ],
-                            [
-                                'attribute' => 'r_price',
-                                'label' => 'Narxi'
-                            ],
-                            [
-                                'attribute' => 'date_for_search',
-                                'format' => 'date',
-                                'label' => Yii::t('app', 'Date'),
-                                'value' => 'details.date'
-                            ]
-                        ],
-                        'pager' => [
-                            'options' => [
-                                'class' => 'pagination',
-                            ],
-                            'linkOptions' => [
-                                'class' => 'page-link'
-                            ],
-                            'disabledListItemSubTagOptions' => [
-                                'class' => 'page-link',
-                                'tag' => 'a',
-                                'href' => '#'
-                            ],
-                            'hideOnSinglePage' => true,
-                            'pageCssClass' => 'paginate_button page-item',
-                            'activePageCssClass' => 'paginate_button page-item active',
-                            'disabledPageCssClass' => 'paginate_button page-item disabled',
-                            'nextPageCssClass' => 'paginate_button page-item next',
-                            'prevPageCssClass' => 'paginate_button page-item previous',
-                            'prevPageLabel' => 'Avvalgi',
-                            'nextPageLabel' => 'Keyingi',
-                        ]
-                    ]); ?>
+                    <table style="font-size: 12px; vertical-align: center;" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th><?= $sort->link('contragent_id') ?></th>
+                                <th><?= $sort->link('product_id') ?></th>
+                                <th><?= $sort->link('quantity') ?></th>
+                                <th><?= $sort->link('r_price') ?></th>
+                                <th><?= $sort->link('date_for_search') ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($all_items as $items):?>
+                            <tr>
+                                <td><?=$items['details']['contragent']['name']?></td>
+                                <td><?=$items['product']['name']?></td>
+                                <td><?=$items['quantity']?></td>
+                                <td><?=$items['r_price']?></td>
+                                <td><?=$items['details']['date']?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -65,10 +65,17 @@ class ReceivedController extends BaseController
     public function actionReceivedProductsReportWithTable()
     {
         $searchModel = new ReceivedSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, true);
+        $all_items = $dataProvider->getModels();
+        $sort = $dataProvider->getSort();
+        $count = $dataProvider->getCount();
+        $total_count = $dataProvider->getTotalCount();
         return $this->render('new_index_with_table', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'all_items' => $all_items,
+            'sort' => $sort,
+            'count' => $count,
+            'total_count' => $total_count
         ]);
     }
     public function actionInfo($id){

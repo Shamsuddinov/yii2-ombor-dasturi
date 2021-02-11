@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $all_items - bir narsalar */
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
 
-            <!--        --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
+                    <?php Pjax::begin(['id' => 'pjaxa']); ?>
             <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
         </div>
         <p class="text-dark pl-4">
@@ -50,6 +51,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-        <!--        --><?php //Pjax::end(); ?>
+                <?php Pjax::end(); ?>
     </div>
 </div>

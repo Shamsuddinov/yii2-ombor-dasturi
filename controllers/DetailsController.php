@@ -29,6 +29,10 @@ class DetailsController extends BaseController
         ];
     }
 
+    public function actionReportReceivedProducts(){
+        return $this->render('reportreceived');
+    }
+
     /**
      * Lists all Details models.
      * @return mixed

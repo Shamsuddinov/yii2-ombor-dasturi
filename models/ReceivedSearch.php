@@ -12,6 +12,9 @@ use app\models\Received;
 class ReceivedSearch extends Received
 {
     public $contragent_id;
+    public $date_for_search;
+    public $from_date;
+    public $to_date;
     /**
      * {@inheritdoc}
      */
@@ -20,7 +23,7 @@ class ReceivedSearch extends Received
         return [
             [['id', 'receiver_id', 'product_id', 'details_id'], 'integer'],
             [['quantity', 'r_price'], 'number'],
-            [['contragent_id'], 'safe'],
+            [['contragent_id', 'date_for_search', 'from_date', 'to_date'], 'safe'],
         ];
     }
 
@@ -51,12 +54,10 @@ class ReceivedSearch extends Received
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
+            'pagination' => false,
             'sort' => [
                 'defaultOrder' => [
-                    'date' => SORT_DESC,
+//                    'date_for_search' => SORT_DESC,
                     'details_id' => SORT_DESC,
                 ],
                 'attributes' => [
@@ -72,7 +73,7 @@ class ReceivedSearch extends Received
                         'asc' => ['c.name' => SORT_ASC],
                         'desc' => ['c.name' => SORT_DESC],
                     ],
-                    'date' => [
+                    'date_for_search' => [
                         'asc' => ['date' => SORT_ASC],
                         'desc' => ['date' => SORT_DESC],
                     ],
@@ -90,7 +91,9 @@ class ReceivedSearch extends Received
 
 
         $this->load($params);
-
+//        $this->setAttributes([
+//           'from_date' =>
+//        ]);
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -106,16 +109,7 @@ class ReceivedSearch extends Received
             'contragent_id' => $this->contragent_id
         ]);
 
-        if(isset($params['ReceivedSearch']['date'])){
-            $query->andFilterWhere([
-                'date' => $params['ReceivedSearch']['date']
-            ]);
-        }
-        if(isset($params['ReceivedSearch']['details_id'])){
-            $query->andFilterWhere([
-                'c.id' => $params['ReceivedSearch']['details_id']
-            ]);
-        }
+        $query->andFilterWhere(['between', 'date', $this->from_date, $this->to_date]);
 
         return $dataProvider;
     }

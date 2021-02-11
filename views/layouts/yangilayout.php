@@ -54,6 +54,15 @@ AppAsset::register($this);
                         <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>
                     </ul>
                 </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Report</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report'])?>">Received product's report</a></li>
+                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product/'])?>">Sold product's report</a></li>
+                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['product-type/'])?>">Edit categories</a></li>
+                        <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>
+                    </ul>
+                </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

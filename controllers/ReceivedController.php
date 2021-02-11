@@ -53,11 +53,20 @@ class ReceivedController extends BaseController
             'dataProvider' => $dataProvider,
         ]);
     }
-    public function actionNewIndex()
+    public function actionReceivedProductsReport()
     {
         $searchModel = new ReceivedSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('new_index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionReceivedProductsReportWithTable()
+    {
+        $searchModel = new ReceivedSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('new_index_with_table', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

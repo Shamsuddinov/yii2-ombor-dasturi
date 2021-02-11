@@ -19,8 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
 
-        <!--        --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
-        <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
+            <!--        --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
+            <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
         </div>
 
         <div class="row">

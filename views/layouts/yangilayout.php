@@ -55,12 +55,22 @@ AppAsset::register($this);
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Report</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-info-circle"></i>Report</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report'])?>">Received product's report</a></li>
                         <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product/'])?>">Sold product's report</a></li>
                         <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['product-type/'])?>">Edit categories</a></li>
                         <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Rule</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-linux"></i><a href="<?= Url::to(['auth-item/index'])?>">Permissions</a></li>
+                        <li><i class="fa fa-linux"></i><a href="<?= Url::to(['auth-item/index'])?>">Permissions</a></li>
+                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['auth-item-child/'])?>">AuthItemChild</a></li>
+                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['auth-assignment/'])?>">Users</a></li>
+                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['auth-rule/'])?>">AuthRule</a></li>
                     </ul>
                 </li>
             </ul>
@@ -177,9 +187,9 @@ AppAsset::register($this);
 
                         <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
 
-                        <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
+                        <a class="nav-link" href="<?= Url::to(['site/login']) ?>"><i class="fa fa -cog"></i>Login</a>
 
-                        <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+                        <a class="nav-link" data-method="POST" href="<?= Url::to(['site/logout']) ?>"><i class="fa fa-power -off"></i>Logout</a>
                     </div>
                 </div>
 

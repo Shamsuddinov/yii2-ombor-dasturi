@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "users".
@@ -10,13 +11,13 @@ use Yii;
  * @property int $id
  * @property string $first_name
  * @property string|null $sur_name
- * @property string|null $login
+ * @property string|null $username
  * @property string|null $password
  *
  * @property Received[] $receiveds
  * @property Sold[] $solds
  */
-class Users extends BaseModel
+class Users extends BaseModel implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -35,9 +36,10 @@ class Users extends BaseModel
         return [
             [['first_name'], 'required'],
             [['first_name', 'sur_name'], 'string', 'max' => 25],
-            [['login'], 'string', 'max' => 30],
-            [['password'], 'string', 'max' => 32],
-            [['login'], 'unique'],
+            [['username'], 'string', 'max' => 30],
+            [['accessToken'], 'string'],
+            [['password', 'authKey'], 'string', 'max' => 32],
+            [['username'], 'unique'],
             ['status', 'integer']
         ];
     }
@@ -51,7 +53,7 @@ class Users extends BaseModel
             'id' => 'ID',
             'first_name' => 'First Name',
             'sur_name' => 'Sur Name',
-            'login' => 'Login',
+            'username' => 'Login',
             'password' => 'Password',
         ];
     }
@@ -75,4 +77,77 @@ class Users extends BaseModel
     {
         return $this->hasMany(Sold::className(), ['seller_id' => 'id']);
     }
+
+    /**
+     * Finds an identity by the given ID.
+     *
+     * @param string|int $id the ID to be looked for
+     * @return IdentityInterface|null the identity object that matches the given ID.
+     */
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    /**
+     * Finds an identity by the given token.
+     *
+     * @param string $token the token to be looked for
+     * @return IdentityInterface|null the identity object that matches the given token.
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['accessToken' => $token]);
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        if(static::findOne(['username' => $username])){
+            return static::findOne(['username' => $username]);
+        }
+        return null;
+    }
+
+    /**
+     * @return int|string current user ID
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string current user auth key
+     */
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    /**
+     * @param string $authKey
+     * @return bool if auth key is valid for current user
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->authKey === $authKey;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
+
 }

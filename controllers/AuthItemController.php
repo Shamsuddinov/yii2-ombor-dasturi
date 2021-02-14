@@ -121,8 +121,42 @@ class AuthItemController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $models = AuthItem::find()->where(['and', ['like', 'name', $id], ['type' => AuthItem::TYPE_PERMISSION]])->all();
+        $model->tabular = $models;
+        if (Yii::$app->request->isPost) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $post = Yii::$app->request->post();
+            $saved = false;
+            try {
+                if($model->load($post) && $model->save()){
+                    foreach ($models as $model){
+                        $model->delete();
+                    }
+                    foreach ($post['AuthItem']['tabular'] as $item){
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                        $new_item = new AuthItem();
+                        $new_item->setAttributes([
+                            'name' => $item['name'],
+                            'description' => $item['description'],
+                            'type' => $new_item::TYPE_PERMISSION
+                        ]);
+                        if($new_item->save()){
+                            $saved = true;
+                            Yii::$app->session->setFlash('success', 'Successfully updated!');
+                        } else{
+                            $saved = false;
+                            break;
+                        }
+                    }
+                }
+                if($saved){
+                    $transaction->commit();
+                } else{
+                    $transaction->rollBack();
+                }
+            }catch (Exception | \Throwable $exception){
+                $transaction->rollBack();
+            }
             return $this->redirect(['view', 'id' => $model->name]);
         }
 

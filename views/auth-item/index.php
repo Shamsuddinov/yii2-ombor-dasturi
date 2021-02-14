@@ -27,7 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body pt-0">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
-                    'filterModel' => $searchModel,
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
                         'name',
@@ -36,11 +35,46 @@ $this->params['breadcrumbs'][] = $this->title;
                            // 'attribute' => 'children',
                             'label' => Yii::t('app', 'Children'),
                             'value' => function($model) {
-
-                                return $model;
-                            }
+                                $all_items = '';
+                                foreach ($model['items'] as $item){
+                                    $all_items .= "<div style='margin: 0 2px; font-size: 12px; padding: 0 10px 0 10px;' class='btn btn-success'>".$item['name']."</div>";
+                                }
+                                return $all_items;
+//                                return 1;
+                            },
+                            'format' => 'raw'
                         ],
-                        ['class' => 'yii\grid\ActionColumn'],
+                        [
+                            'header' => 'Boshqarish',
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{view} {update} {delete}',
+                            'visible' => true,
+                            'contentOptions' => [
+                                'style' => 'width: 90px; max-width:110px; text-align:center;'
+                            ],
+                            'buttonOptions' => [
+                                'style' => 'width:20px; color: red;'
+                            ],
+                            'buttons' => [
+                                'view' => function ($url, $model) {
+                                    return Html::a('<span class="fa fa-eye"></span>', \yii\helpers\Url::to(['auth-item/view', 'id' => $model['name']]), [
+                                        'class' => 'view-modal btn btn-sm btn-success',
+                                        'title' => Yii::t('app', 'Product information')
+                                    ]);
+                                },
+                                'update' => function ($url, $model) {
+                                    return Html::a('<span class="fa fa-pencil"></span>', \yii\helpers\Url::to(['auth-item/update', 'id' => $model['name']]), [
+                                        'class' => 'update-modal btn btn-sm btn-primary',
+                                        'title' => Yii::t('app', 'Update product')
+                                    ]) ;
+                                },
+                                'delete' => function ($url) {
+                                    return Html::a('<span class="fa fa-trash"></span>', $url, [
+                                        'class' => 'delete-button-ajax btn btn-sm btn-danger',
+                                    ]);
+                                },
+                            ]
+                        ],
                     ],
                 ]); ?>
                 </div>

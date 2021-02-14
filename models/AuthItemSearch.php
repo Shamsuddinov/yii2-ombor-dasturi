@@ -5,6 +5,8 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\AuthItem;
+use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * AuthItemSearch represents the model behind the search form of `app\models\AuthItem`.
@@ -14,10 +16,11 @@ class AuthItemSearch extends AuthItem
     /**
      * {@inheritdoc}
      */
+    public $children;
     public function rules()
     {
         return [
-            [['name', 'description', 'rule_name', 'data'], 'safe'],
+            [['name', 'description', 'rule_name', 'data', 'children'], 'safe'],
             [['type', 'created_at', 'updated_at'], 'integer'],
         ];
     }
@@ -42,37 +45,28 @@ class AuthItemSearch extends AuthItem
     public function search($params, $type = null)
     {
         $query = AuthItem::find();
+        $items = AuthItem::find();
+        $items->asArray();
 
         if($type != null) {
             $query->where(['type' => $type]);
         }
+        $query->asArray();
+        $arr = [];
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
+        foreach ($query->all() as $key => $item){
+            $items->filterWhere(['like', 'name', $item['name']])->andFilterWhere(['type' => AuthItem::TYPE_PERMISSION]);
+            ArrayHelper::setValue($item, 'items', $items->all());
+            array_push($arr, $item);
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'type' => $this->type,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $arr,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'rule_name', $this->rule_name])
-            ->andFilterWhere(['like', 'data', $this->data]);
-
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
         return $dataProvider;
     }
 }

@@ -61,6 +61,39 @@ class AuthItemController extends BaseController
         ]);
     }
 
+    public function actionUpdateRules($id){
+//        return 'abbosichka';
+    }
+
+    public function actionCreateRules(){
+        $model = new AuthItem();
+        $post = Yii::$app->request->post();
+        $transaction = Yii::$app->db->beginTransaction();
+        if(Yii::$app->request->isPost && $model->load($post)){
+            $model->setAttribute('type', $model::TYPE_RULE);
+            if($model->save()){
+                $transaction->commit();
+                BaseModel::getMessages(true, 'added');
+                return $this->redirect(['auth-item/index-rules']);
+            } else{
+                $transaction->rollBack();
+            }
+        }
+        return $this->render('create_rules', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionIndexRules(){
+        $searchModel = new AuthItemSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, 1);
+
+        return $this->render('index_rules', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Creates a new AuthItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -85,7 +118,8 @@ class AuthItemController extends BaseController
                         $new_model->setAttributes([
                             'name' => $model->name."/".$post_item['name'],
                             'description' => $post_item['description'],
-                            'type' => $new_model::TYPE_PERMISSION
+                            'type' => $new_model::TYPE_PERMISSION,
+                            'data' => $model->name
                         ]);
                         if($new_model->save()){
                             $saved = true;
@@ -97,10 +131,10 @@ class AuthItemController extends BaseController
                 }
                 if ($saved) {
                     $transaction->commit();
-                    Yii::$app->session->setFlash('success', '');
+                    BaseModel::getMessages(true, 'created');
                 } else {
                     $transaction->rollBack();
-                    Yii::$app->session->setFlash('danger', '');
+                    BaseModel::getMessages(false);
                 }
             } catch (Exception $e){
                 $transaction->rollBack();
@@ -124,7 +158,11 @@ class AuthItemController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $models = AuthItem::find()->where(['and', ['like', 'name', $id], ['type' => AuthItem::TYPE_PERMISSION]])->all();
+        $models = AuthItem::find()->where(['and', ['data' => $id], ['type' => AuthItem::TYPE_PERMISSION]])->all();
+        foreach ($models as $model_item){
+            $data_len = strlen($model_item->data);
+            $model_item->name = substr($model_item->name, $data_len + 1);
+        }
         $model->tabular = $models;
         if (Yii::$app->request->isPost) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -132,22 +170,23 @@ class AuthItemController extends BaseController
             $saved = false;
             try {
                 if($model->load($post) && $model->save()){
-                    foreach ($models as $model){
-                        $model->delete();
+                    foreach ($models as $old_model_items){
+                        $old_model_items->delete();
                     }
                     foreach ($post['AuthItem']['tabular'] as $item){
-
                         $new_item = new AuthItem();
                         $new_item->setAttributes([
-                            'name' => $item['name'],
+                            'name' => $model->name."/".$item['name'],
                             'description' => $item['description'],
-                            'type' => $new_item::TYPE_PERMISSION
+                            'type' => $new_item::TYPE_PERMISSION,
+                            'data' => $model->name
                         ]);
                         if($new_item->save()){
                             $saved = true;
-                            Yii::$app->session->setFlash('success', 'Successfully updated!');
+                            BaseModel::getMessages(true, 'updated');
                         } else{
                             $saved = false;
+                            BaseModel::getMessages(false);
                             break;
                         }
                     }

@@ -55,7 +55,7 @@ class AuthItemSearch extends AuthItem
         $arr = [];
 
         foreach ($query->all() as $key => $item){
-            $items->filterWhere(['like', 'name', $item['name']])->andFilterWhere(['type' => AuthItem::TYPE_PERMISSION]);
+            $items->filterWhere(['data' => $item['name']])->andFilterWhere(['type' => AuthItem::TYPE_PERMISSION]);
             ArrayHelper::setValue($item, 'items', $items->all());
             array_push($arr, $item);
         }

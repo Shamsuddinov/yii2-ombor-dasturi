@@ -67,10 +67,8 @@ AppAsset::register($this);
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Rule</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['auth-item/index'])?>">Permissions</a></li>
-                        <li><i class="fa fa-linux"></i><a href="<?= Url::to(['auth-item/index'])?>">Permissions</a></li>
-                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['auth-item-child/'])?>">AuthItemChild</a></li>
+                        <li><i class="fa fa-address-book"></i><a href="<?= Url::to(['auth-item/index-rules'])?>">Rules</a></li>
                         <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['auth-assignment/'])?>">Users</a></li>
-                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['auth-rule/'])?>">AuthRule</a></li>
                     </ul>
                 </li>
             </ul>

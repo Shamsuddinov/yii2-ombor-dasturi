@@ -58,7 +58,7 @@ class BaseModel extends ActiveRecord
         }
         return $result;
     }
-    public static  function getErrorsMessage($type = true, $message = 'added'){
+    public static  function getMessages($type = true, $message = 'added'){
         $session = \Yii::$app->session;
         if($type){
             $session->setFlash('success', \Yii::t('app', "Successfully $message!"));

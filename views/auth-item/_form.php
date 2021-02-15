@@ -7,6 +7,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\AuthItem */
+/* @var $rules views\auth-item\create_rules */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -31,7 +32,7 @@ use yii\widgets\ActiveForm;
             </tr>
         </tbody>
     </table>
-
+    <?php if($rules === false): ?>
     <?= $form->field($model, 'tabular')->widget(MultipleInput::class, [
         'iconSource' => 'fa',
         'cloneButton' => false,
@@ -75,7 +76,7 @@ use yii\widgets\ActiveForm;
             ],
         ],
     ])->label(false); ?>
-
+    <?php endif; ?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>

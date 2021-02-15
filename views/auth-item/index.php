@@ -56,21 +56,21 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'style' => 'width:20px; color: red;'
                             ],
                             'buttons' => [
-                                'view' => function ($url, $model) {
-                                    return Html::a('<span class="fa fa-eye"></span>', \yii\helpers\Url::to(['auth-item/view', 'id' => $model['name']]), [
-                                        'class' => 'view-modal btn btn-sm btn-success',
-                                        'title' => Yii::t('app', 'Product information')
-                                    ]);
-                                },
+//                                'view' => function ($url, $model) {
+//                                    return Html::a('<span class="fa fa-eye"></span>', \yii\helpers\Url::to(['auth-item/view', 'id' => $model['name']]), [
+//                                        'class' => 'view-modal btn btn-sm btn-success',
+//                                        'title' => Yii::t('app', 'Product information')
+//                                    ]);
+//                                },
                                 'update' => function ($url, $model) {
                                     return Html::a('<span class="fa fa-pencil"></span>', \yii\helpers\Url::to(['auth-item/update', 'id' => $model['name']]), [
                                         'class' => 'update-modal btn btn-sm btn-primary',
                                         'title' => Yii::t('app', 'Update product')
                                     ]) ;
                                 },
-                                'delete' => function ($url) {
-                                    return Html::a('<span class="fa fa-trash"></span>', $url, [
-                                        'class' => 'delete-button-ajax btn btn-sm btn-danger',
+                                'delete' => function ($url, $model) {
+                                    return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['auth-item/delete', 'id' => $model['name']]), [
+                                        'class' => 'delete-items-with-ajax btn btn-sm btn-danger',
                                     ]);
                                 },
                             ]

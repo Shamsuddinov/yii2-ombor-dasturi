@@ -232,7 +232,8 @@ $delete = Yii::t('app', 'Delete');
 $cancel = Yii::t('app', 'Cancel');
 $goto = Url::to(['details/index']);
 $js = <<<JS
-   $('body').delegate('.delete-button-ajax','click',function (event){
+   let selectBody = $('body');
+   selectBody.delegate('.delete-items-with-ajax','click',function (event){
       event.preventDefault();
       let tr = $(this).parents('tr');
       let url = $(this).attr('href');
@@ -245,7 +246,36 @@ $js = <<<JS
           cancelButtonText: '$cancel',
           padding: '2em'
         }).then(function(result) {
-          if (result.value) {    
+          if (result.value) {
+              $.ajax({
+                    url: url,
+                    type: "POST",
+                    success: function (res) {
+                        if (res['status'] === 'true') {
+                            swal(res['saved_one'], res['saved'], 'success')
+                            location.reload();
+                        } else {
+                            swal( res['error_one'], res['error'], 'warning')
+                        }
+                    }
+              });
+          }
+        })
+    });
+   selectBody.delegate('.delete-button-ajax','click',function (event){
+      event.preventDefault();
+      let tr = $(this).parents('tr');
+      let url = $(this).attr('href');
+      swal({
+          title: '$title',
+          text: '$text',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: '$delete',
+          cancelButtonText: '$cancel',
+          padding: '2em'
+        }).then(function(result) {
+          if (result.value) {
               $.ajax({
                     url: url,
                     type: "POST",
@@ -269,7 +299,7 @@ $js = <<<JS
           }
         })
     });
-   $('body').delegate('.delete-with-ajax','click',function (event){
+   selectBody.delegate('.delete-with-ajax','click',function (event){
       event.preventDefault();
       let url = $(this).attr('href');
       swal({

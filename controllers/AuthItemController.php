@@ -2,13 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\BaseModel;
 use Exception;
+use Faker\Provider\Base;
 use Yii;
 use app\models\AuthItem;
 use app\models\AuthItemSearch;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * AuthItemController implements the CRUD actions for AuthItem model.
@@ -157,7 +160,7 @@ class AuthItemController extends BaseController
             }catch (Exception | \Throwable $exception){
                 $transaction->rollBack();
             }
-            return $this->redirect(['view', 'id' => $model->name]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -174,9 +177,36 @@ class AuthItemController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id);
+        $transaction = Yii::$app->db->beginTransaction();
+        $saved = false;
+        try {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $models = AuthItem::find()->where(['and', ['like', 'name', $id."/"], ['type' => AuthItem::TYPE_PERMISSION]])->all();
+            foreach ($models as $model_item){
+                if($model_item->delete()){
+                    $saved = true;
+                } else {
+                    $saved = false;
+                    break;
+                }
+            }
+            if($saved){
+                if($model->delete()){
+                    $transaction->commit();
+                    return BaseModel::getResult(true);
+                } else {
+                    $transaction->rollBack();
+                    return BaseModel::getResult(false);
+                }
+            } else {
+                $transaction->rollBack();
+                return BaseModel::getResult(false);
+            }
+        } catch (Exception | \Throwable $exception){
+            $transaction->rollBack();
+            return BaseModel::getResult(false);
+        }
     }
 
     /**

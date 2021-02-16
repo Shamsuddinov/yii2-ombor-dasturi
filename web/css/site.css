@@ -262,3 +262,6 @@ td.w0 {
 .checkbox-column-list-header {
     padding: 10px;
 }
+.reset-password{
+    cursor: pointer;
+}

@@ -19,8 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'rules')->widget(Select2::classname(), [
         'data' => \app\models\AuthItem::getAllAuthRules(),
         'theme' => Select2::THEME_BOOTSTRAP,
@@ -29,7 +27,18 @@ use yii\widgets\ActiveForm;
         'pluginOptions' => [
             'allowClear' => true
         ]])->label('Rules :') ?>
-
+    <div class="reset-password" style="font-weight: bold; text-decoration: underline;" ><?= Yii::t('app', 'Reset password.') ?></div>
+    <div class="reset-password d-none" style="font-weight: bold; text-decoration: underline;" ><?= Yii::t('app', 'Cancel changing password.') ?></div>
+    <?= $form->field($model, 'password')->textInput([
+        'class' => 'd-none form-control',
+        'maxlength' => true,
+        'value' => '',
+        'id' => 'user-password',
+        'autocomplete' => false
+    ])->label(Yii::t('app', 'Password'), [
+        'class' => 'd-none control-label',
+        'id' => 'password-label',
+    ]) ?>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
@@ -37,3 +46,12 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+    $js = <<<JS
+    $('.reset-password').click(function() {
+        $('.reset-password, #user-password, #password-label').toggleClass('d-none');
+        $('#user-password').attr('autocomplete', false);
+    });
+JS;
+    $this->registerJs($js);
+?>

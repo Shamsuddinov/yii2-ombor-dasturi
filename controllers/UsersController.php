@@ -7,6 +7,8 @@ use app\models\BaseModel;
 use Yii;
 use app\models\Users;
 use app\models\UsersSearch;
+use yii\helpers\ArrayHelper;
+use yii\rbac\Assignment;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -69,29 +71,37 @@ class UsersController extends BaseController
         $model = new Users();
         $post = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post())) {
+            $model->password = md5($model->password);
+            if(gettype($post['Users']['rules']) == 'string'){
+                BaseModel::getErrorMessages(false, 'Please select user rule!');
+            }
             $transaction = Yii::$app->db->beginTransaction();
             $saved = false;
             try {
-                if($model->save()){
-                    foreach ($post['Users']['rules'] as $rule){
-                        $save_rule = new AuthAssignment();
-                        $save_rule->setAttributes([
-                            'item_name' => $rule,
-                            'user_id' => "$model->id"
-                        ]);
-                        if($save_rule->save()){
-                            $saved = true;
+                if($post['Users']['rules'] !== null){
+                    if($model->save() && gettype($post['Users']['rules']) != 'string'){
+                        foreach ($post['Users']['rules'] as $rule){
+                            $save_rule = new AuthAssignment();
+                            $save_rule->setAttributes([
+                                'item_name' => $rule,
+                                'user_id' => "$model->id"
+                            ]);
+                            if($save_rule->save()){
+                                $saved = true;
+                            } else{
+                                $saved = false;
+                            }
+                        }
+                        if($saved){
+                            BaseModel::getMessages(true, 'added');
+                            $transaction->commit();
+                            return $this->redirect(['index']);
                         } else{
-                            $saved = false;
+                            $transaction->rollBack();
                         }
                     }
-                    if($saved){
-                        BaseModel::getMessages(true, 'added');
-                        $transaction->commit();
-                        return $this->redirect(['index']);
-                    } else{
-                        $transaction->rollBack();
-                    }
+                } else {
+                    BaseModel::getErrorMessages(false, Yii::t('app', 'There are some mistakes!'));
                 }
             } catch (\Exception $exception){
                 $transaction->rollBack();
@@ -115,9 +125,48 @@ class UsersController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->rules = ArrayHelper::map(AuthAssignment::find()->where(['user_id' => "$model->id"])->all(), 'item_name', 'item_name');
+        $post = Yii::$app->request->post();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($post) && gettype($post['Users']['rules']) === 'array') {
+            $transaction = Yii::$app->db->beginTransaction();
+            $saved = false;
+            try {
+                if($post['Users']['password'] !== ''){
+                    $model->setAttributes([
+                        'password' => md5($post['Users']['password'])
+                    ]);
+                }
+                if($model->save()){
+                    AuthAssignment::deleteAll(['user_id' => "$model->id"]);
+                    foreach ($post['Users']['rules'] as $rule){
+                        $auth_items = new AuthAssignment();
+                        $auth_items->setAttributes([
+                            'item_name' => $rule,
+                            'user_id' => "$model->id"
+                        ]);
+                        if($auth_items->save()){
+                            $saved = true;
+                        } else {
+                            $saved = false;
+                        }
+                    }
+                }
+                if($saved){
+                    BaseModel::getMessages(true, 'updated');
+                    $transaction->commit();
+                    return $this->redirect(['view', 'id' => $model->id]);
+                } else {
+                    BaseModel::getErrorMessages(false, 'Please check all items!');
+                    $transaction->rollBack();
+                }
+            } catch (\Exception | \Throwable $exception){
+                $transaction->rollBack();
+            }
+        } else {
+            if(Yii::$app->request->isPost){
+                BaseModel::getErrorMessages(false, Yii::t('app', 'Please select user rules!'));
+            }
         }
 
         return $this->render('update', [

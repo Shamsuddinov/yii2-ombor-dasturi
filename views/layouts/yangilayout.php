@@ -68,7 +68,7 @@ AppAsset::register($this);
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['auth-item/index'])?>">Permissions</a></li>
                         <li><i class="fa fa-address-book"></i><a href="<?= Url::to(['auth-item/index-rules'])?>">Rules</a></li>
-                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['auth-assignment/'])?>">Users</a></li>
+                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['users/'])?>">Users</a></li>
                     </ul>
                 </li>
             </ul>

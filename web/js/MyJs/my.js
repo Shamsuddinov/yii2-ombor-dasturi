@@ -7,4 +7,21 @@ jQuery(document).ready(function($) {
         $('#modal-header').html(title)
         $('#myModal').modal('show');
     });
+
+
+    $('body').delegate('input', 'blur', function () {
+        let val = $(this).val();
+        let required = $(this).parent('div').hasClass('required');
+        if (val === '' && required === true) {
+            $(this).css({'border-color':'red'});
+        } else {
+            if (val === '' && required === false) {
+                $(this).css({'border-color': 'green'});
+            } else {
+                $(this).css({'border-color': '#ced4da'});
+            }
+        }
+    });
+    $('.help-block').css({'color':'red'});
+
 });

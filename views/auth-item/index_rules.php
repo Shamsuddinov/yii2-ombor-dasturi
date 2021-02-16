@@ -24,11 +24,23 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-12">
                 <div class="card-body pt-0">
                     <?= GridView::widget([
-                        'dataProvider' => $dataProvider,
+                        'dataProvider' => $rules,
                         'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
                             'name',
                             'description:ntext',
+                            [
+                                'label' => Yii::t('app', 'Children'),
+                                'value' => function($model) {
+                                    $all_items = '';
+                                    if(count($model['authItemChildren']) > 0){
+                                        foreach ($model['authItemChildren'] as $item){
+                                            $all_items .= "<div style='margin: 0 2px; font-size: 12px; padding: 0 10px 0 10px;' class='btn btn-success'>".$item['child']."</div>";
+                                        }
+                                    }
+                                    return $all_items;
+                                },
+                                'format' => 'raw'
+                            ],
                             [
                                 'header' => 'Boshqarish',
                                 'class' => 'yii\grid\ActionColumn',
@@ -42,13 +54,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
                                 'buttons' => [
                                     'update' => function ($url, $model) {
-                                        return Html::a('<span class="fa fa-pencil"></span>', \yii\helpers\Url::to(['auth-item/update', 'id' => $model['name']]), [
+                                        return Html::a('<span class="fa fa-pencil"></span>', \yii\helpers\Url::to(['auth-item/update-rules', 'id' => $model['name']]), [
                                             'class' => 'update-modal btn btn-sm btn-primary',
                                             'title' => Yii::t('app', 'Update product')
                                         ]) ;
                                     },
                                     'delete' => function ($url, $model) {
-                                        return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['auth-item/delete', 'id' => $model['name']]), [
+                                        return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['auth-item/delete-rules', 'id' => $model['name']]), [
                                             'class' => 'delete-items-with-ajax btn btn-sm btn-danger',
                                         ]);
                                     },

@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\AuthItemChild;
 use app\models\BaseModel;
 use Exception;
 use Faker\Provider\Base;
 use Yii;
 use app\models\AuthItem;
 use app\models\AuthItemSearch;
+use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -62,35 +64,109 @@ class AuthItemController extends BaseController
     }
 
     public function actionUpdateRules($id){
-//        return 'abbosichka';
+        $model = $this->findModel($id);
+        $model_and_items = AuthItem::find()->where(['and', ['type' => AuthItem::TYPE_RULE], ['name' => $id]])->joinWith('authItemChildren')->asArray()->all();
+        $all_permissions = $this->findAllPermissions();
+        if(Yii::$app->request->isPost){
+            $post = Yii::$app->request->post();
+            $transaction = Yii::$app->db->beginTransaction();
+            $saved = false;
+            try {
+                if($model->load($post) && $model->save()){
+                    if(AuthItemChild::deleteAll(['parent' => $model->name])){
+                        foreach ($post['AuthItemChild'] as $child_elements){
+                            foreach ($child_elements as $child_element){
+                                $new_rules = new AuthItemChild();
+                                $new_rules->setAttributes([
+                                    'parent' => $model->name,
+                                    'child' => $child_element
+                                ]);
+                                if($new_rules->save()){
+                                    $saved = true;
+                                } else{
+                                    $saved = false;
+                                    $transaction->rollBack();
+                                    BaseModel::getMessages(false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if($saved){
+                    BaseModel::getMessages(true, 'updated');
+                    $transaction->commit();
+                    return $this->redirect(['auth-item/index-rules']);
+                } else{
+                    BaseModel::getMessages(false);
+                    $transaction->rollBack();
+                }
+            } catch (Exception | \Throwable $exception){
+                $transaction->rollBack();
+            }
+        }
+        return $this->render('update_rules', [
+            'model' => $model,
+            'all_permissions' => $all_permissions,
+            'model_and_items' => $model_and_items[0]['authItemChildren']
+        ]);
     }
 
     public function actionCreateRules(){
         $model = new AuthItem();
         $post = Yii::$app->request->post();
         $transaction = Yii::$app->db->beginTransaction();
+        $saved = false;
         if(Yii::$app->request->isPost && $model->load($post)){
             $model->setAttribute('type', $model::TYPE_RULE);
             if($model->save()){
-                $transaction->commit();
-                BaseModel::getMessages(true, 'added');
-                return $this->redirect(['auth-item/index-rules']);
+                foreach ($post['AuthItemChild'] as $child_elements){
+                    foreach ($child_elements as $child_element){
+                        $add_items = new AuthItemChild();
+                        $add_items->setAttributes([
+                            'parent' => $model['name'],
+                            'child' => $child_element
+                        ]);
+                        if($add_items->save()){
+                            $saved = true;
+                            BaseModel::getMessages(true, 'added');
+                        } else {
+                            $saved = false;
+                            BaseModel::getMessages(false);
+                            $transaction->rollBack();
+                        }
+                    }
+                }
+
+                if($saved){
+                    $transaction->commit();
+                    BaseModel::getMessages(true, 'added');
+                    return $this->redirect(['auth-item/index-rules']);
+                } else{
+                    $transaction->rollBack();
+                    BaseModel::getMessages(false);
+                }
             } else{
+                BaseModel::getMessages(false);
                 $transaction->rollBack();
             }
+            return $this->redirect(['auth-item/index-rules']);
         }
+        $all_permissions = $this->findAllPermissions();
+
         return $this->render('create_rules', [
-            'model' => $model
+            'model' => $model,
+            'all_permissions' => $all_permissions
         ]);
     }
 
     public function actionIndexRules(){
-        $searchModel = new AuthItemSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, 1);
-
+        $authItem = AuthItem::find()->where(['type' => AuthItem::TYPE_RULE])->joinWith('authItemChildren');
+        $dataprovider = new ArrayDataProvider([
+            'allModels' => $authItem->asArray()->all()
+        ]);
         return $this->render('index_rules', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'rules' => $dataprovider
         ]);
     }
 
@@ -262,5 +338,14 @@ class AuthItemController extends BaseController
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+    protected function findAllPermissions(){
+        $all_permissions = AuthItem::find()->where(['type' => AuthItem::TYPE_CONTROLLER_NAME])->asArray()->all();
+        foreach ($all_permissions as $key => $permission){
+            $items = AuthItem::find()->where(['and', ['type' => AuthItem::TYPE_PERMISSION], ['data' => $permission['name']]])->asArray()->all();
+            ArrayHelper::setValue($permission, 'sub_items', $items);
+            $all_permissions[$key] = $permission;
+        }
+        return $all_permissions;
     }
 }

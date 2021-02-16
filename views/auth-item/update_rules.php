@@ -6,6 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\AuthItem */
 /* @var $models app\models\AuthItem */
 /* @var $all_permissions app\models\AuthItem */
+/* @var $model_and_items app\models\AuthItem */
 
 $this->title = Yii::t('app', 'Create rules');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Rules'), 'url' => ['index']];
@@ -22,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= $this->render('_form', [
                         'model' => $model,
                         'all_permissions' => $all_permissions,
-                        'rules' => true
+                        'rules' => true,
+                        'model_and_items' => $model_and_items
                     ]) ?>
                 </div>
             </div>

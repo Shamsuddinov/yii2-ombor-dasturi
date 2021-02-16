@@ -96,9 +96,9 @@ a.desc:after {
     border: none;
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
     .nav li > form > button.logout {
-        display:block;
+        display: block;
         text-align: left;
         width: 100%;
         padding: 10px 15px;
@@ -113,77 +113,93 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
-tr > th{
+
+tr > th {
     font-size: 12px;
-    background: white!important;
+    background: white !important;
 }
-tr > th > a{
+
+tr > th > a {
     color: rgb(33, 37, 41);
 }
+
 tr#w0-filters > td > a {
     padding: 4px;
     color: red;
-    background: green!important;
+    background: green !important;
 }
+
 tr#w0-filters > td {
     padding: 4px;
     background: white;
 }
-tr#w0-filters > td > select, tr#w0-filters > td > input{
+
+tr#w0-filters > td > select, tr#w0-filters > td > input {
     background: white;
     height: 30px;
-    font-size: 10px!important;
+    font-size: 10px !important;
     align-items: center;
 }
 
-#w1-filters > td > select, #w1-filters > td > input, #w1-filters > td > div > *{
-    font-size: 10px!important;
+#w1-filters > td > select, #w1-filters > td > input, #w1-filters > td > div > * {
+    font-size: 10px !important;
     height: 28px;
     align-items: center;
 }
 
-tr.received-table-row > td{
+tr.received-table-row > td {
     font-size: 12px;
 }
+
 .table td, .table th {
-    padding: .30rem!important;
+    padding: .30rem !important;
 }
+
 a.btn.btn-sm {
-    font-size: 10px!important;
+    font-size: 10px !important;
     padding: 2px 5px;
 }
-td > label{
-    display: block!important;
+
+td > label {
+    display: block !important;
 }
-thead > tr > th.list-cell__button{
+
+thead > tr > th.list-cell__button {
     border: none;
     vertical-align: inherit;
 }
-.heyy{
-    width: 10%;!important;
+
+.heyy {
+    width: 10%;
+!important;
 }
-.select2-container--krajee .select2-selection{
-    font-family:Roboto, sans-serif !important;
-    font-size: 12px!important;
+
+.select2-container--krajee .select2-selection {
+    font-family: Roboto, sans-serif !important;
+    font-size: 12px !important;
     line-height: 20px;
 }
-.select2-container--krajee .select2-results__option{
-    font-family:Roboto, sans-serif !important;
+
+.select2-container--krajee .select2-results__option {
+    font-family: Roboto, sans-serif !important;
     font-size: 12px;
 }
-.add-close-button{
+
+.add-close-button {
     height: 30px;
     align-items: center;
-    margin-top: 3px!important;
+    margin-top: 3px !important;
 }
-.save-button, .save-button > .btn{
+
+.save-button, .save-button > .btn {
     align-items: center;
     text-align: center;
     font-size: 12px;
     text-transform: uppercase;
     font-weight: bold;
 }
-.save-button > .btn{
+
+.save-button > .btn {
     margin: 10px;
     align-items: center;
     text-align: center;
@@ -192,28 +208,57 @@ thead > tr > th.list-cell__button{
     font-weight: bold;
     width: 95%;
 }
-ul.pagination{
+
+ul.pagination {
     font-size: 12px;
 }
-.input-items{
+
+.input-items {
     line-height: 20px;
-    font-size:12px;
+    font-size: 12px;
     height: 34px;
     width: 100%;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     padding-left: 15px;
 }
-.control-label{
+
+.control-label {
     font-size: 12px;
     font-weight: bold;
 }
+
 tr, td.w0 {
-    vertical-align: inherit!important;
+    vertical-align: inherit !important;
 }
-td.w0{
+
+td.w0 {
     font-size: 12px;
 }
-.no-print{
-    display : none !important;
+
+.no-print {
+    display: none !important;
+}
+
+.no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.checkbox-column {
+    padding: 0 0 0 10px!important;
+}
+
+.checkbox-column-list {
+    border: 1px solid #e5e3e3;
+    margin: 2px;
+    padding: 0 0 10px 10px!important;
+}
+
+.checkbox-column-list-header {
+    padding: 10px;
 }

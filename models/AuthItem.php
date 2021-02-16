@@ -30,6 +30,7 @@ class AuthItem extends ActiveRecord
     const TYPE_PERMISSION = 2;
     const TYPE_CONTROLLER_NAME = 3;
     public $children;
+    public $sub_items;
     public $tabular;
     public function behaviors()
     {
@@ -63,7 +64,7 @@ class AuthItem extends ActiveRecord
             [['rule_name', 'children'], 'default', 'value' => null],
             [['type', 'created_at', 'updated_at'], 'integer'],
             [['description', 'data'], 'string'],
-            [['children', 'tabular'], 'safe'],
+            [['children', 'tabular', 'sub_items'], 'safe'],
             [['name', 'rule_name'], 'string', 'max' => 64],
             [['name'], 'unique'],
             [['rule_name'], 'exist', 'skipOnError' => true, 'targetClass' => AuthRule::className(), 'targetAttribute' => ['rule_name' => 'name']],

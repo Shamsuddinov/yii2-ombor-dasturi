@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\AuthAssignment;
 use app\models\BaseModel;
+use Faker\Provider\Base;
 use Yii;
 use app\models\Users;
 use app\models\UsersSearch;
@@ -185,8 +186,31 @@ class UsersController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        if($model = $this->findModel($id)){
+            $transaction = Yii::$app->db->beginTransaction();
+            $saved = false;
+            try {
+                AuthAssignment::deleteAll(['user_id' => "$model->id"]);
+                if(AuthAssignment::find()->where(['user_id' => "$model->id"])->count() == 0){
+                    if($model->delete()){
+                        $saved = true;
+                    } else {
+                        $saved = false;
+                        $transaction->rollBack();
+                    }
+                }
+                if($saved){
+                    BaseModel::getMessages(true, 'deleted');
+                    $transaction->commit();
+                } else {
+                    BaseModel::getMessages(false);
+                    $transaction->rollBack();
+                }
+            } catch (\Exception $exception){
+                BaseModel::getErrorMessages(false, Yii::t('app', $exception));
+                $transaction->rollBack();
+            }
+        }
         return $this->redirect(['index']);
     }
 

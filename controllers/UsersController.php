@@ -56,8 +56,10 @@ class UsersController extends BaseController
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->rules = AuthAssignment::find()->where(['user_id' => "$model->id"])->asArray()->all();
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

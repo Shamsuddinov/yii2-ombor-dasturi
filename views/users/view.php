@@ -34,7 +34,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             'first_name',
                             'sur_name',
                             'username',
-                            'password',
+                            [
+                                'attribute' => 'rules',
+                                'value' => function($model){
+                                    $rules = '';
+                                   foreach ($model->rules as $rule){
+                                       $rules .= "<div style='margin: 0 2px; font-size: 12px; padding: 0 10px 0 10px;' class='btn btn-success'>".$rule['item_name']."</div>";
+                                   }
+                                   return $rules;
+                                },
+                                'format' => 'raw'
+                            ],
                         ],
                     ]) ?>
                 </div>

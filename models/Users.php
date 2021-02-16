@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -56,6 +57,11 @@ class Users extends BaseModel implements IdentityInterface
             'username' => 'Login',
             'password' => 'Password',
         ];
+    }
+
+    public static function getAllUsers(): array
+    {
+        return ArrayHelper::map(Users::find()->asArray()->all(), 'id', 'username');
     }
 
     /**

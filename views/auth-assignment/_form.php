@@ -1,5 +1,6 @@
 <?php
 
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -12,9 +13,19 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'item_name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'item_name')->widget(Select2::classname(), [
+        'data' => \app\models\AuthItem::getAllAuthRules() ,
+        'options' => ['placeholder' => 'Rules', 'id' => 'item_name'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ]])->label('Rules :') ?>
 
-    <?= $form->field($model, 'user_id')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'user_id')->widget(Select2::classname(), [
+        'data' => \app\models\Users::getAllUsers() ,
+        'options' => ['placeholder' => 'Foydalanuvchilar', 'id' => 'user_id'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ]])->label('Foydalanuvchilar :') ?>
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 

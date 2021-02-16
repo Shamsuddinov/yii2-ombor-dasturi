@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\AuthItemChild;
 use app\models\BaseModel;
 use Exception;
-use Faker\Provider\Base;
 use Yii;
 use app\models\AuthItem;
 use app\models\AuthItemSearch;
@@ -117,7 +116,7 @@ class AuthItemController extends BaseController
         $post = Yii::$app->request->post();
         $transaction = Yii::$app->db->beginTransaction();
         $saved = false;
-        if(Yii::$app->request->isPost && $model->load($post)){
+        if($model->load($post)){
             $model->setAttribute('type', $model::TYPE_RULE);
             if($model->save()){
                 foreach ($post['AuthItemChild'] as $child_elements){
@@ -240,12 +239,12 @@ class AuthItemController extends BaseController
             $model_item->name = substr($model_item->name, $data_len + 1);
         }
         $model->tabular = $models;
-        if (Yii::$app->request->isPost) {
+        $post = Yii::$app->request->post();
+        if ($model->load($post)) {
             $transaction = Yii::$app->db->beginTransaction();
-            $post = Yii::$app->request->post();
             $saved = false;
             try {
-                if($model->load($post) && $model->save()){
+                if($model->save()){
                     foreach ($models as $old_model_items){
                         $old_model_items->delete();
                     }
@@ -259,18 +258,18 @@ class AuthItemController extends BaseController
                         ]);
                         if($new_item->save()){
                             $saved = true;
-                            BaseModel::getMessages(true, 'updated');
                         } else{
                             $saved = false;
-                            BaseModel::getMessages(false);
                             break;
                         }
                     }
                 }
                 if($saved){
                     $transaction->commit();
+                    BaseModel::getMessages(true, 'updated');
                 } else{
                     $transaction->rollBack();
+                    BaseModel::getMessages(false);
                 }
             }catch (Exception | \Throwable $exception){
                 $transaction->rollBack();

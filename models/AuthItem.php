@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "auth_item".
@@ -145,5 +146,10 @@ class AuthItem extends ActiveRecord
     public function getParents()
     {
         return $this->hasMany(AuthItem::className(), ['name' => 'parent'])->viaTable('auth_item_child', ['child' => 'name']);
+    }
+
+    public static function getAllAuthRules(): array
+    {
+        return ArrayHelper::map(AuthItem::find()->where(['type' => 1])->asArray()->all(), 'name', 'name');
     }
 }

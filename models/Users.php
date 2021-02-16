@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
  */
 class Users extends BaseModel implements IdentityInterface
 {
+    public $rules;
     /**
      * {@inheritdoc}
      */
@@ -41,7 +42,8 @@ class Users extends BaseModel implements IdentityInterface
             [['accessToken'], 'string'],
             [['password', 'authKey'], 'string', 'max' => 32],
             [['username'], 'unique'],
-            ['status', 'integer']
+            ['status', 'integer'],
+            ['rules', 'safe']
         ];
     }
 
@@ -56,7 +58,12 @@ class Users extends BaseModel implements IdentityInterface
             'sur_name' => 'Sur Name',
             'username' => 'Login',
             'password' => 'Password',
+            'rules' => 'Rules',
         ];
+    }
+    public function getUserRules()
+    {
+        return $this->hasMany(AuthAssignment::className(), ['id' => 'user_id']);
     }
 
     public static function getAllUsers(): array

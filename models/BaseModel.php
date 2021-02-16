@@ -66,4 +66,12 @@ class BaseModel extends ActiveRecord
             $session->setFlash('danger', \Yii::t('app', 'Please check all items, because there are some mistakes.'));
         }
     }
+    public static  function getErrorMessages($type = true, $message = 'added'){
+        $session = \Yii::$app->session;
+        if($type){
+            $session->setFlash('success', \Yii::t('app', "Successfully $message!"));
+        } else {
+            $session->setFlash('danger', \Yii::t('app', $message));
+        }
+    }
 }

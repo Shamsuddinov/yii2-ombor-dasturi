@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\AuthAssignment;
+use app\models\BaseModel;
 use Yii;
 use app\models\Users;
 use app\models\UsersSearch;
@@ -65,9 +67,37 @@ class UsersController extends BaseController
     public function actionCreate()
     {
         $model = new Users();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $post = Yii::$app->request->post();
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            $saved = false;
+            try {
+                if($model->save()){
+                    foreach ($post['Users']['rules'] as $rule){
+                        $save_rule = new AuthAssignment();
+                        $save_rule->setAttributes([
+                            'item_name' => $rule,
+                            'user_id' => "$model->id"
+                        ]);
+                        if($save_rule->save()){
+                            $saved = true;
+                        } else{
+                            $saved = false;
+                        }
+                    }
+                    if($saved){
+                        BaseModel::getMessages(true, 'added');
+                        $transaction->commit();
+                        return $this->redirect(['index']);
+                    } else{
+                        $transaction->rollBack();
+                    }
+                }
+            } catch (\Exception $exception){
+                $transaction->rollBack();
+                BaseModel::getErrorMessages(false, $exception->getMessage());
+            }
+//            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [

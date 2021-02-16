@@ -297,15 +297,25 @@ class AuthItemController extends BaseController
         $saved = false;
         try {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            $models = AuthItem::find()->where(['and', ['like', 'name', $id."/"], ['type' => AuthItem::TYPE_PERMISSION]])->all();
-            foreach ($models as $model_item){
-                if($model_item->delete()){
+            if($model->type === AuthItem::TYPE_CONTROLLER_NAME){
+                $models = AuthItem::find()->where(['and', ['data' => $id], ['type' => AuthItem::TYPE_PERMISSION]])->all();
+                foreach ($models as $model_item){
+                    if($model_item->delete()){
+                        $saved = true;
+                    } else {
+                        $saved = false;
+                        break;
+                    }
+                }
+            }
+            if ($model->type === AuthItem::TYPE_RULE){
+                if(AuthItemChild::deleteAll(['parent' => $model->name])){
                     $saved = true;
                 } else {
                     $saved = false;
-                    break;
                 }
             }
+
             if($saved){
                 if($model->delete()){
                     $transaction->commit();

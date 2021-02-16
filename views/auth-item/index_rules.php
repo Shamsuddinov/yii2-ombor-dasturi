@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         ]) ;
                                     },
                                     'delete' => function ($url, $model) {
-                                        return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['auth-item/delete-rules', 'id' => $model['name']]), [
+                                        return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['auth-item/delete', 'id' => $model['name']]), [
                                             'class' => 'delete-items-with-ajax btn btn-sm btn-danger',
                                         ]);
                                     },

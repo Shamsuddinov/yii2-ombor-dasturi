@@ -233,7 +233,6 @@ $js = <<<JS
    let selectBody = $('body');
    selectBody.delegate('.delete-items-with-ajax','click',function (event){
       event.preventDefault();
-      let tr = $(this).parents('tr');
       let url = $(this).attr('href');
       swal({
           title: '$title',

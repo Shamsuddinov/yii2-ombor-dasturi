@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\AuthAssignment;
 use app\models\BaseModel;
+use app\models\Brand;
 use Faker\Provider\Base;
 use Yii;
 use app\models\Users;
@@ -13,6 +14,7 @@ use yii\rbac\Assignment;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * UsersController implements the CRUD actions for Users model.
@@ -200,11 +202,19 @@ class UsersController extends BaseController
                     }
                 }
                 if($saved){
-                    BaseModel::getMessages(true, 'deleted');
                     $transaction->commit();
+                    if(Yii::$app->request->isAjax){
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return Brand::getResult(true);
+                    }
+                    BaseModel::getMessages(true, 'deleted');
                 } else {
-                    BaseModel::getMessages(false);
                     $transaction->rollBack();
+                    if(Yii::$app->request->isAjax){
+                        Yii::$app->response->format = Response::FORMAT_JSON;
+                        return Brand::getResult(false);
+                    }
+                    BaseModel::getMessages(false);
                 }
             } catch (\Exception $exception){
                 BaseModel::getErrorMessages(false, Yii::t('app', $exception));

@@ -130,19 +130,25 @@ $js = <<<JS
                             price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>Iltimos administratorga xatolik haqida xabar bering.</div>");      
                         }
                         if(!quantity_field.hasClass('d-none')){
-                            quantity_field.addClass('d-none');
+                            quantity_field.addClass('d-none').attr('value', 0);
                         }
                     }
                 } else {
                     price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>Bu omborda bunday mahsulot yo'q.</div>");      
                     price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'></div>");      
                     if(!quantity_field.hasClass('d-none')){
-                        quantity_field.addClass('d-none');
+                        quantity_field.attr('value', 0).addClass('d-none');
                     }
                 }
             }
         });
     }
+    $('.sold-form').delegate('.input-items', 'blur', function() {
+        let sum = 0;
+        $('.input-items').map((id, item) => {
+            console.log($(item).val());
+        });
+    })
 JS;
 $this->registerJs($js);
 ?>

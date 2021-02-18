@@ -68,7 +68,7 @@ use yii\widgets\ActiveForm;
                     'placeholder' => "Nechta olmoqchisiz",
                     'class' => 'd-none form-control input-items',
                     'type' => 'number',
-                    'autocomplete' => false
+                    'autocomplete' => false,
                 ],
             ],
         ],
@@ -114,11 +114,13 @@ $js = <<<JS
             success: function (product) {
                 if(product !== 'false'){
                     if(product.quantity > 0 && product.price > 0){
-                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + Math.floor(product.price)  + "</div>");
-                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + Math.floor(product.quantity) + "</div>");   
+                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price) + "</span>"  + "</div>");
+                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");   
                         quantity_field.attr('max', Math.floor(product.quantity));
                         if(quantity_field.hasClass('d-none')){
                             quantity_field.removeClass('d-none');
+                        } else {
+                            $.fn.changeSummary();
                         }
                     } else {
                         if(product.quantity === 0){
@@ -130,25 +132,41 @@ $js = <<<JS
                             price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>Iltimos administratorga xatolik haqida xabar bering.</div>");      
                         }
                         if(!quantity_field.hasClass('d-none')){
-                            quantity_field.addClass('d-none').attr('value', 0);
+                            quantity_field.val(0);
+                            quantity_field.addClass('d-none');
                         }
                     }
                 } else {
                     price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>Bu omborda bunday mahsulot yo'q.</div>");      
                     price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'></div>");      
                     if(!quantity_field.hasClass('d-none')){
-                        quantity_field.attr('value', 0).addClass('d-none');
+                        quantity_field.val(0);
+                        quantity_field.addClass('d-none').trigger('change');
                     }
                 }
             }
         });
     }
-    $('.sold-form').delegate('.input-items', 'blur', function() {
+    $.fn.changeSummary = function() {
         let sum = 0;
         $('.input-items').map((id, item) => {
-            console.log($(item).val());
+            let price = $(".input-price-value")[id].innerText * 1;
+            let quantity = $(".input-quantity-value")[id].innerText * 1;
+            let itemvalue = $(item).val() * 1;
+            if(quantity >= itemvalue){
+                $(item).removeAttr('css').css('color', '#495057');
+                sum += itemvalue * price;
+            } else {
+                $(item).val(quantity).removeAttr('css').css('color', 'red');
+                sum += quantity * price;
+            }
         });
-    })
+        $('.input-summary').html("Jami summa: " + sum).removeClass('d-none');      
+    }
+    $('#w1').on('afterDeleteRow', function(e, row, currentIndex) { 
+        $.fn.changeSummary();
+     });
+    $('.sold-form').delegate('.input-items', 'blur', function() { $.fn.changeSummary() });
 JS;
 $this->registerJs($js);
 ?>

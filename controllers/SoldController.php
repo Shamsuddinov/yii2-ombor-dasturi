@@ -11,6 +11,7 @@ use app\models\SoldSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * SoldController implements the CRUD actions for Sold model.
@@ -82,14 +83,16 @@ class SoldController extends BaseController
     }
 
     public function actionPriceAndQuantity($id){
-        $product = Product::find()->where(['id' => $id])->asArray()->one();
-//        $product_balance = ProductBalance::find()
-//            ->where(['department_id' => Yii::$app->user->identity->department_id]);
-        echo "<pre>";
-        print_r(Yii::$app->user->identity->department_id);
-        echo "</pre>";
-        exit();
-        return "response";
+        $product_balance = ProductBalance::find()
+            ->where(['department_id' => Yii::$app->user->identity->department_id, 'product_id' => $id])
+            ->asArray()
+            ->one();
+        if($product_balance){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $product_balance;
+        } else{
+            return "false";
+        }
     }
 
     /**

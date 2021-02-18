@@ -50,7 +50,6 @@ use yii\widgets\ActiveForm;
             ],
             [
                 'name' => 'custom',
-//                'title' => 'Quantity',
                 'options' => [
                     'required' => true,
                     'placeholder' => "Nechta olmoqchisiz"
@@ -62,10 +61,21 @@ use yii\widgets\ActiveForm;
                                         </div>
                                     </div>"
             ],
-
+            [
+                'name' => 'quantity',
+                'options' => [
+                    'required' => true,
+                    'placeholder' => "Nechta olmoqchisiz",
+                    'class' => 'd-none form-control input-items',
+                    'type' => 'number',
+                    'autocomplete' => false
+                ],
+            ],
         ],
     ])->label(false); ?>
-
+    <div class='row'>
+        <div class='offset-8 col-4 input-summary d-none'></div>
+    </div>
     <!--    <? /*= $form->field($model, 'quantity')->textInput(['maxlength' => true]) */ ?>
 
     <? /*= $form->field($model, 's_price')->textInput(['maxlength' => true]) */ ?>
@@ -74,7 +84,7 @@ use yii\widgets\ActiveForm;
 
     <? /*= $form->field($model, 'product_id')->textInput() */ ?>
 
-    --><? /*= $form->field($model, 'department_id')->textInput() */ ?>
+    <? /*= $form->field($model, 'department_id')->textInput() */ ?>-->
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -86,20 +96,50 @@ use yii\widgets\ActiveForm;
 
 <?php
 $url = \yii\helpers\Url::to(['sold/price-and-quantity']);
+$price_text = Yii::t('app', 'Price');
+$quantity_text = Yii::t('app', 'Quantity');
 $js = <<<JS
     $.fn.itemSelected = function(thisItem) {
         let str = thisItem.target.id;
         let a = str.indexOf('r-') + 2;
         let b = str.indexOf('-product');
         let id = str.slice(a, b);
-        let selected_item = "select#sold-tabular-"+ id +"-product_id";
-        let productId = $(selected_item).val();
+        let productId = $("select#sold-tabular-"+ id +"-product_id").val();
+        let price_and_quantity = $("div.field-sold-tabular-"+ id +"-custom");
+        let quantity_field = $("#sold-tabular-"+ id +"-quantity");
         let url = "$url" + "&id=" + productId;
         $.ajax({
             url: url,
             type: "POST",
-            success: function (res) {
-                console.log(res);
+            success: function (product) {
+                if(product !== 'false'){
+                    if(product.quantity > 0 && product.price > 0){
+                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + Math.floor(product.price)  + "</div>");
+                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + Math.floor(product.quantity) + "</div>");   
+                        quantity_field.attr('max', Math.floor(product.quantity));
+                        if(quantity_field.hasClass('d-none')){
+                            quantity_field.removeClass('d-none');
+                        }
+                    } else {
+                        if(product.quantity === 0){
+                            price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>Bu mahsulot omborda qolmagan.</div>");
+                            price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'></div>");
+                        }
+                        if(product.price <= 0){
+                            price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'></div>");      
+                            price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>Iltimos administratorga xatolik haqida xabar bering.</div>");      
+                        }
+                        if(!quantity_field.hasClass('d-none')){
+                            quantity_field.addClass('d-none');
+                        }
+                    }
+                } else {
+                    price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>Bu omborda bunday mahsulot yo'q.</div>");      
+                    price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'></div>");      
+                    if(!quantity_field.hasClass('d-none')){
+                        quantity_field.addClass('d-none');
+                    }
+                }
             }
         });
     }

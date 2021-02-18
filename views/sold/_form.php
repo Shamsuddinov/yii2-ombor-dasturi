@@ -76,15 +76,6 @@ use yii\widgets\ActiveForm;
     <div class='row'>
         <div class='offset-8 col-4 input-summary d-none'></div>
     </div>
-    <!--    <? /*= $form->field($model, 'quantity')->textInput(['maxlength' => true]) */ ?>
-
-    <? /*= $form->field($model, 's_price')->textInput(['maxlength' => true]) */ ?>
-
-    <? /*= $form->field($model, 'seller_id')->textInput() */ ?>
-
-    <? /*= $form->field($model, 'product_id')->textInput() */ ?>
-
-    <? /*= $form->field($model, 'department_id')->textInput() */ ?>-->
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -114,8 +105,8 @@ $js = <<<JS
             success: function (product) {
                 if(product !== 'false'){
                     if(product.quantity > 0 && product.price > 0){
-                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price) + "</span>"  + "</div>");
-                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");   
+                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price * 1.1) + "</span>"  + "</div>");
+                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");
                         quantity_field.attr('max', Math.floor(product.quantity));
                         if(quantity_field.hasClass('d-none')){
                             quantity_field.removeClass('d-none');

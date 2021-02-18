@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\BaseModel;
 use app\models\Brand;
 use app\models\Product;
 use app\models\ProductBalance;
@@ -28,6 +29,7 @@ class SoldController extends BaseController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'price-and-quantity' => ['POST']
                 ],
             ],
         ];
@@ -68,15 +70,58 @@ class SoldController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new Sold();
-//        echo "<pre>";
-//        print_r(Yii::$app->request->post());
-//        echo "</pre>";
-//        exit();
-//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//            return $this->redirect(['view', 'id' => $model->id]);
-//        }
+        if(Yii::$app->request->isPost){
+            $post_items = Yii::$app->request->post()['Sold']['tabular'];
+            $transaction = Yii::$app->db->beginTransaction();
+            $saved = false;
+            try {
+                foreach ($post_items as $post_item){
+                    $product = Product::find()->where(['id' => $post_item['product_id']])->asArray()->one();
+                    if($product){
+                        $product_balance = ProductBalance::find()
+                            ->where(['and',
+                                ['department_id' => Yii::$app->user->identity->department_id],
+                                ['product_id' => $post_item['product_id']],
+                                ])
+                            ->andWhere(['>','quantity', $post_item['quantity']])
+                            ->one();
+                        $product_balance->setAttributes([
+                            'quantity' => $product_balance['quantity'] - $post_item['quantity']
+                        ]);
+                        if($product_balance->save()){
+                            $selled_product = new Sold();
+                            $selled_product->setAttributes([
+                                'date' => date('Y-m-d h:i:s'),
+                                'quantity' => $post_item['quantity'],
+                                's_price' => $product_balance['price'] * 1.1,
+                                'seller_id' => Yii::$app->user->id,
+                                'product_id' => $product['id'],
+                                'status' => Sold::STATUS_INACTIVE,
+                                'department_id' => Yii::$app->user->identity->department_id
+                            ]);
+                            if($selled_product->save()){
+                                $saved = true;
+                            } else {
+                                $saved = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if($saved){
+                    BaseModel::getMessages(true, 'updated');
+                    $transaction->commit();
+                    return $this->redirect(['sold/index']);
+                } else {
+                    BaseModel::getMessages(false);
+                    $transaction->rollBack();
+                }
+            } catch (\Exception | \Throwable $exception){
+                $transaction->rollBack();
+            }
+        }
 
+        $model = new Sold();
         return $this->render('create', [
             'model' => $model,
         ]);

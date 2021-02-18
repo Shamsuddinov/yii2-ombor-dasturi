@@ -29,18 +29,74 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-
-                        'id',
+                        [
+                            'attribute' => 'product_name',
+                            'value' => 'product.name',
+                        ],
                         'date',
                         'quantity',
                         's_price',
-                        'seller_id',
-                        'product_id',
-                        'department_id',
-
-                        ['class' => 'yii\grid\ActionColumn'],
+                        [
+                            'attribute' => 'department_name',
+                            'value' => 'department.name'
+                        ],
+                        [
+                            'attribute' => 'seller_name',
+                            'value' => 'seller.username'
+                        ],
+                        [
+                            'header' => 'Boshqarish',
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{view} {update} {delete}',
+                            'visible' => true,
+                            'contentOptions' => [
+                                'style' => 'width: 90px; max-width:110px; text-align:center;'
+                            ],
+                            'buttonOptions' => [
+                                'style' => 'width:20px; color: red;'
+                            ],
+                            'buttons' => [
+                                'view' => function ($url) {
+                                    return Html::a('<span class="fa fa-eye"></span>', $url, [
+                                        'class' => 'view-modal btn btn-sm btn-success show-modal',
+                                        'title' => Yii::t('app', 'Product information')
+                                    ]);
+                                },
+                                'update' => function ($url) {
+                                    return Html::a('<span class="fa fa-pencil"></span>', $url, [
+                                        'class' => 'update-modal btn btn-sm btn-primary show-modal',
+                                        'title' => Yii::t('app', 'Update product')
+                                    ]) ;
+                                },
+                                'delete' => function ($url) {
+                                    return Html::a('<span class="fa fa-trash"></span>', $url, [
+                                        'class' => 'delete-button-ajax btn btn-sm btn-danger',
+                                    ]);
+                                },
+                            ]
+                        ],
                     ],
+                    'pager' => [
+                        'options' => [
+                            'class' => 'pagination',
+                        ],
+                        'linkOptions' => [
+                            'class' => 'page-link'
+                        ],
+                        'disabledListItemSubTagOptions' => [
+                            'class' => 'page-link',
+                            'tag' => 'a',
+                            'href' => '#'
+                        ],
+                        'hideOnSinglePage' => true,
+                        'pageCssClass' => 'paginate_button page-item',
+                        'activePageCssClass' => 'paginate_button page-item active',
+                        'disabledPageCssClass' => 'paginate_button page-item disabled',
+                        'nextPageCssClass' => 'paginate_button page-item next',
+                        'prevPageCssClass' => 'paginate_button page-item previous',
+                        'prevPageLabel' => 'Avvalgi',
+                        'nextPageLabel' => 'Keyingi',
+                    ]
                 ]); ?>
                 </div>
             </div>

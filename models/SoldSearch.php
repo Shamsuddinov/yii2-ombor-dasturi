@@ -5,13 +5,16 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Sold;
+use yii\data\ArrayDataProvider;
 
 /**
  * SoldSearch represents the model behind the search form of `app\models\Sold`.
  */
 class SoldSearch extends Sold
 {
-
+    public $department_name;
+    public $product_name;
+    public $seller_name;
     /**
      * {@inheritdoc}
      */
@@ -19,7 +22,7 @@ class SoldSearch extends Sold
     {
         return [
             [['id', 'seller_id', 'product_id', 'department_id'], 'integer'],
-            [['date'], 'safe'],
+            [['date', 'department_name', 'product_name', 'seller_name'], 'safe'],
             [['quantity', 's_price'], 'number'],
         ];
     }
@@ -42,32 +45,33 @@ class SoldSearch extends Sold
      */
     public function search($params)
     {
-        $query = Sold::find();
-
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $query = Sold::find()
+            ->joinWith(['seller', 'department', 'product'])->asArray();
 
         $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'date' => $this->date,
-            'quantity' => $this->quantity,
+            'sold.quantity' => $this->quantity,
             's_price' => $this->s_price,
-            'seller_id' => $this->seller_id,
-            'product_id' => $this->product_id,
-            'department_id' => $this->department_id,
+//            'seller_id' => $this->seller_id,
+//            'product_id' => $this->product_id,
+//            'department_id' => $this->department_id,
         ]);
+
+        $query->andFilterWhere(['like', 'department.name', $this->department_name]);
+        $query->andFilterWhere(['like', 'product.name', $this->product_name]);
+        $query->andFilterWhere(['like', 'users.username', $this->seller_name]);
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $query->all(),
+        ]);
+
+        if (!$this->validate()) {
+            return $dataProvider;
+        }
+
 
         return $dataProvider;
     }

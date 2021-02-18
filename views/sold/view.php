@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="col-lg-12">
+<?php if(!Yii::$app->request->isAjax): ?>
     <div class="card">
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]) ?>
         </div>
+<?php endif; ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body pt-0">
@@ -41,5 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
+<?php if(!Yii::$app->request->isAjax): ?>
     </div>
+<?php endif; ?>
 </div>

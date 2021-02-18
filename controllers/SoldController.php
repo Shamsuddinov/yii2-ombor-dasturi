@@ -57,8 +57,14 @@ class SoldController extends BaseController
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $model,
+            ]);
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

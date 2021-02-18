@@ -56,18 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'style' => 'width:20px; color: red;'
                             ],
                             'buttons' => [
-                                'view' => function ($url) {
-                                    return Html::a('<span class="fa fa-eye"></span>', $url, [
+                                'view' => function ($url, $model) {
+                                    return Html::a('<span class="fa fa-eye"></span>', \yii\helpers\Url::to(['sold/view', 'id' => $model['id']]), [
                                         'class' => 'view-modal btn btn-sm btn-success show-modal',
                                         'title' => Yii::t('app', 'Product information')
                                     ]);
                                 },
-                                'update' => function ($url) {
-                                    return Html::a('<span class="fa fa-pencil"></span>', $url, [
-                                        'class' => 'update-modal btn btn-sm btn-primary show-modal',
-                                        'title' => Yii::t('app', 'Update product')
-                                    ]) ;
-                                },
+//                                'update' => function ($url, $model) {
+//                                    return Html::a('<span class="fa fa-pencil"></span>', \yii\helpers\Url::to(['sold/update', 'id' => $model['id']]), [
+//                                        'class' => 'btn btn-sm btn-primary',
+//                                        'title' => Yii::t('app', 'Update product')
+//                                    ]) ;
+//                                },
                                 'delete' => function ($url) {
                                     return Html::a('<span class="fa fa-trash"></span>', $url, [
                                         'class' => 'delete-button-ajax btn btn-sm btn-danger',

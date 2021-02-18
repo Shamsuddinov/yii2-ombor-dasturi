@@ -19,6 +19,7 @@ use Yii;
  */
 class Sold extends BaseModel
 {
+    public $tabular;
     /**
      * {@inheritdoc}
      */
@@ -34,10 +35,11 @@ class Sold extends BaseModel
     {
         parent::rules();
         return [
-            [['date'], 'safe'],
+            [['date', 'tabular'], 'safe'],
             [['quantity', 's_price'], 'number'],
-            [['seller_id', 'product_id', 'status'], 'integer'],
+            [['seller_id', 'product_id', 'status', 'department_id'], 'integer'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
+            [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['seller_id' => 'id']],
         ];
     }
@@ -75,5 +77,10 @@ class Sold extends BaseModel
     public function getSeller()
     {
         return $this->hasOne(Users::className(), ['id' => 'seller_id']);
+    }
+
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::className(), ['id' => 'department_id']);
     }
 }

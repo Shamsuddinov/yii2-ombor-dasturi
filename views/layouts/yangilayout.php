@@ -42,7 +42,7 @@ AppAsset::register($this);
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-folder-o"></i>Products</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-exchange"></i><a href="<?= Url::to(['details/'])?>">Received products</a></li>
-                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['received/'])?>">Selled products</a></li>
+                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['sold/'])?>">Selled products</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">
@@ -58,6 +58,7 @@ AppAsset::register($this);
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-info-circle"></i>Report</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report'])?>">Received product's report</a></li>
+                        <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report-with-table'])?>">Received product's report with table</a></li>
                         <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product/'])?>">Sold product's report</a></li>
                         <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['product-type/'])?>">Edit categories</a></li>
                         <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>

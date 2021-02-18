@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Brand;
+use app\models\Product;
+use app\models\ProductBalance;
 use Yii;
 use app\models\Sold;
 use app\models\SoldSearch;
@@ -65,14 +68,28 @@ class SoldController extends BaseController
     public function actionCreate()
     {
         $model = new Sold();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+//        echo "<pre>";
+//        print_r(Yii::$app->request->post());
+//        echo "</pre>";
+//        exit();
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
 
         return $this->render('create', [
             'model' => $model,
         ]);
+    }
+
+    public function actionPriceAndQuantity($id){
+        $product = Product::find()->where(['id' => $id])->asArray()->one();
+//        $product_balance = ProductBalance::find()
+//            ->where(['department_id' => Yii::$app->user->identity->department_id]);
+        echo "<pre>";
+        print_r(Yii::$app->user->identity->department_id);
+        echo "</pre>";
+        exit();
+        return "response";
     }
 
     /**

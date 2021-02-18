@@ -42,8 +42,9 @@ class Users extends BaseModel implements IdentityInterface
             [['accessToken'], 'string'],
             [['password', 'authKey'], 'string', 'max' => 32],
             [['username'], 'unique'],
-            ['status', 'integer'],
-            ['rules', 'safe']
+            [['status', 'department_id'], 'integer'],
+            ['rules', 'safe'],
+            [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
         ];
     }
 
@@ -59,6 +60,7 @@ class Users extends BaseModel implements IdentityInterface
             'username' => 'Login',
             'password' => 'Password',
             'rules' => 'Rules',
+            'department_id' => 'Department id',
         ];
     }
     public function getUserRules()
@@ -161,6 +163,11 @@ class Users extends BaseModel implements IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === $password;
+    }
+
+    public function getDepartment()
+    {
+        return $this->hasOne(Department::className(), ['id' => 'department_id']);
     }
 
 }

@@ -11,13 +11,14 @@ use app\models\Sold;
  */
 class SoldSearch extends Sold
 {
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'seller_id', 'product_id'], 'integer'],
+            [['id', 'seller_id', 'product_id', 'department_id'], 'integer'],
             [['date'], 'safe'],
             [['quantity', 's_price'], 'number'],
         ];
@@ -65,6 +66,7 @@ class SoldSearch extends Sold
             's_price' => $this->s_price,
             'seller_id' => $this->seller_id,
             'product_id' => $this->product_id,
+            'department_id' => $this->department_id,
         ]);
 
         return $dataProvider;

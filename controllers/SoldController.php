@@ -27,7 +27,6 @@ class SoldController extends BaseController
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
-
                     'price-and-quantity' => ['POST']
                 ],
             ],

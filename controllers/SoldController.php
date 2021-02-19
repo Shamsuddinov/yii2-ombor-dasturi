@@ -165,6 +165,23 @@ class SoldController extends BaseController
         ]);
     }
 
+    public function actionSoldProductsReport(){
+        $searchModel = new SoldSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $all_items = $dataProvider->getModels();
+        $count = $dataProvider->getCount();
+        $total_count = $dataProvider->getTotalCount();
+        $sort = $dataProvider->getSort();
+
+        return $this->render('sold-report', [
+            'searchModel' => $searchModel,
+            'all_items' => $all_items,
+            'count' => $count,
+            'total_count' => $total_count,
+            'sort' => $sort
+        ]);
+    }
+
     /**
      * Deletes an existing Sold model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -174,7 +191,11 @@ class SoldController extends BaseController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        if(Yii::$app->request->isAjax){
+
+        }
 
         return $this->redirect(['index']);
     }

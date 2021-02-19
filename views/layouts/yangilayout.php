@@ -59,9 +59,8 @@ AppAsset::register($this);
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report'])?>">Received product's report</a></li>
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['received/received-products-report-with-table'])?>">Received product's report with table</a></li>
-                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product/'])?>">Sold product's report</a></li>
-                        <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['product-type/'])?>">Edit categories</a></li>
-                        <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>
+                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['sold/sold-products-report'])?>">Sold product's report</a></li>
+                        <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product-balance/product-balance-report'])?>">Product balance report</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">

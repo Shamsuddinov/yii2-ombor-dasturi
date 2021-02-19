@@ -68,11 +68,11 @@ $this->params['breadcrumbs'][] = $this->title;
 //                                        'title' => Yii::t('app', 'Update product')
 //                                    ]) ;
 //                                },
-                                'delete' => function ($url) {
-                                    return Html::a('<span class="fa fa-trash"></span>', $url, [
-                                        'class' => 'delete-button-ajax btn btn-sm btn-danger',
-                                    ]);
-                                },
+//                                'delete' => function ($url, $model) {
+//                                    return Html::a('<span class="fa fa-trash"></span>', \yii\helpers\Url::to(['sold/update', 'id' => $model['id']]), [
+//                                        'class' => 'delete-button-ajax btn btn-sm btn-danger',
+//                                    ]);
+//                                },
                             ]
                         ],
                     ],

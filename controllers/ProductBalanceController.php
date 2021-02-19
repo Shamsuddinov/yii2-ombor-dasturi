@@ -29,6 +29,23 @@ class ProductBalanceController extends BaseController
         ];
     }
 
+    public function actionProductBalanceReport(){
+        $searchModel = new ProductBalanceSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, true);
+        $all_items = $dataProvider->getModels();
+        $count = $dataProvider->getCount();
+        $total_count = $dataProvider->getTotalCount();
+        $sort = $dataProvider->getSort();
+
+        return $this->render('product-balance-report', [
+            'searchModel' => $searchModel,
+            'all_items' => $all_items,
+            'count' => $count,
+            'total_count' => $total_count,
+            'sort' => $sort
+        ]);
+    }
+
     /**
      * Lists all ProductBalance models.
      * @return mixed

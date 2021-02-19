@@ -3,13 +3,11 @@
 namespace app\controllers;
 
 use app\models\BaseModel;
-use app\models\Brand;
 use app\models\Product;
 use app\models\ProductBalance;
 use Yii;
 use app\models\Sold;
 use app\models\SoldSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;

@@ -230,6 +230,23 @@ $delete = Yii::t('app', 'Delete');
 $cancel = Yii::t('app', 'Cancel');
 $goto = Url::to(['details/index']);
 $js = <<<JS
+   let items = $('.menu-item-has-children');
+   let page_url = location.pathname + location.search;
+   let i_found_it = false;
+    items.map((id, item) => {
+       let child_ul = $(item).find('ul > li');
+       child_ul.map((id, li_item) => {
+          if($(li_item).find('a').attr('href') === page_url){
+              i_found_it = true;
+              console.log(i_found_it)
+          }
+       });
+       if(i_found_it){
+           $(items[id]).addClass('show').find('ul.sub-menu').addClass('show');
+           i_found_it = !i_found_it;
+           return false;
+       }
+    });
    let selectBody = $('body');
    selectBody.delegate('.delete-items-with-ajax','click',function (event){
       event.preventDefault();
@@ -334,7 +351,7 @@ $js = <<<JS
           }
         })
     });
-
+   
 JS;
 $this->registerJs($js);
 $flash = Yii::$app->session;

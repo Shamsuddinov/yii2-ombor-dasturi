@@ -29,23 +29,42 @@ $this->params['breadcrumbs'][] = $this->title;
                     <table style="font-size: 12px; vertical-align: center;" class="table table-hover table-bordered">
                         <thead>
                             <tr>
+                                <th style="text-align: center;">#</th>
                                 <th><?= $sort->link('contragent_id') ?></th>
                                 <th><?= $sort->link('product_id') ?></th>
                                 <th><?= $sort->link('quantity') ?></th>
                                 <th><?= $sort->link('r_price') ?></th>
+                                <th><?= $sort->link('summa') ?></th>
                                 <th><?= $sort->link('date_for_search') ?></th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($all_items as $items):?>
+                        <?php
+                            $sum = 0;
+                            $quantity = 0;
+                            foreach ($all_items as $key => $items):
+                        ?>
                             <tr>
-                                <td><?=$items['details']['contragent']['name']?></td>
-                                <td><?=$items['product']['name']?></td>
-                                <td><?=$items['quantity']?></td>
-                                <td><?=$items['r_price']?></td>
-                                <td><?=$items['details']['date']?></td>
+                                <td style="text-align: center;"><?= $key + 1 ?></td>
+                                <td><?= $items['details']['contragent']['name'] ?></td>
+                                <td><?= $items['product']['name'] ?></td>
+                                <td><?= floor($items['quantity']) ?></td>
+                                <td><?= floor($items['r_price']) ?></td>
+                                <td><?= $items['r_price'] * $items['quantity'] ?></td>
+                                <td><?= $items['details']['date'] ?></td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php
+                            $quantity += floor($items['quantity']);
+                            $sum += floor($items['r_price']);
+                            endforeach;
+                        ?>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="1">Jami soni : <?= $quantity ?></td>
+                            <td colspan="1"></td>
+                            <td colspan="1">Jami summa : <?= $sum ?></td>
+                            <td colspan="1"></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

@@ -102,8 +102,9 @@ $js = <<<JS
         $.ajax({
             url: url,
             type: "POST",
-            success: function (product) {
-                if(product !== 'false'){
+            success: function (response) {
+                if(response.status){
+                    let product = response.result;
                     if(product.quantity > 0 && product.price > 0){
                         price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price * 1.1) + "</span>"  + "</div>");
                         price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");

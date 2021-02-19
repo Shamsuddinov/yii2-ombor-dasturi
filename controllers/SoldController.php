@@ -95,10 +95,12 @@ class SoldController extends BaseController
                         ]);
                         if($product_balance->save()){
                             $selled_product = new Sold();
+                            $price_i = $product_balance['price'] * 1.1;
+
                             $selled_product->setAttributes([
                                 'date' => date('Y-m-d h:i:s'),
                                 'quantity' => $post_item['quantity'],
-                                's_price' => $product_balance['price'] * 1.1,
+                                's_price' => $price_i,
                                 'seller_id' => Yii::$app->user->id,
                                 'product_id' => $product['id'],
                                 'status' => Sold::STATUS_INACTIVE,
@@ -133,16 +135,20 @@ class SoldController extends BaseController
     }
 
     public function actionPriceAndQuantity($id){
+        $response = [];
+        $response['status'] = false;
+        $response['message'] = Yii::t('app','Data is empty');
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $product_balance = ProductBalance::find()
             ->where(['department_id' => Yii::$app->user->identity->department_id, 'product_id' => $id])
             ->asArray()
             ->one();
         if($product_balance){
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return $product_balance;
-        } else{
-            return "false";
+            $response['status'] = true;
+            $response['result'] = $product_balance;
+            $response['message'] = 'OK';
         }
+        return $response;
     }
 
     /**

@@ -82,8 +82,8 @@ AppAsset::register($this);
     <header id="header" class="header">
         <div class="top-left">
             <div class="navbar-header">
-                <a class="navbar-brand" href="./"><img src="images/logo.png" alt="Logo"></a>
-                <a class="navbar-brand hidden" href="./"><img src="images/logo2.png" alt="Logo"></a>
+                <a class="navbar-brand" href="./"><img src="../images/logo.png" alt="Logo"></a>
+                <a class="navbar-brand hidden" href="./"><img src="../images/logo2.png" alt="Logo"></a>
                 <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
             </div>
         </div>
@@ -140,7 +140,7 @@ AppAsset::register($this);
                         <div class="dropdown-menu" aria-labelledby="message">
                             <p class="red">You have 4 Mails</p>
                             <a class="dropdown-item media" href="#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/1.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="../images/avatar/1.jpg"></span>
                                 <div class="message media-body">
                                     <span class="name float-left">Jonathan Smith</span>
                                     <span class="time float-right">Just now</span>
@@ -148,7 +148,7 @@ AppAsset::register($this);
                                 </div>
                             </a>
                             <a class="dropdown-item media" href="#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/2.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="../images/avatar/2.jpg"></span>
                                 <div class="message media-body">
                                     <span class="name float-left">Jack Sanders</span>
                                     <span class="time float-right">5 minutes ago</span>
@@ -156,7 +156,7 @@ AppAsset::register($this);
                                 </div>
                             </a>
                             <a class="dropdown-item media" href="#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/3.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="../images/avatar/3.jpg"></span>
                                 <div class="message media-body">
                                     <span class="name float-left">Cheryl Wheeler</span>
                                     <span class="time float-right">10 minutes ago</span>
@@ -164,7 +164,7 @@ AppAsset::register($this);
                                 </div>
                             </a>
                             <a class="dropdown-item media" href="#">
-                                <span class="photo media-left"><img alt="avatar" src="images/avatar/4.jpg"></span>
+                                <span class="photo media-left"><img alt="avatar" src="../images/avatar/4.jpg"></span>
                                 <div class="message media-body">
                                     <span class="name float-left">Rachel Santos</span>
                                     <span class="time float-right">15 minutes ago</span>
@@ -177,7 +177,7 @@ AppAsset::register($this);
 
                 <div class="user-area dropdown float-right">
                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar">
+                        <img class="user-avatar rounded-circle" src="../images/admin.jpg" alt="User Avatar">
                     </a>
 
                     <div class="user-menu dropdown-menu">
@@ -237,8 +237,8 @@ $js = <<<JS
        let child_ul = $(item).find('ul > li');
        child_ul.map((id, li_item) => {
           if($(li_item).find('a').attr('href') === page_url){
+              $(li_item).find('a').css('color', '#4b48b7').css('font-weight', 'bold');
               i_found_it = true;
-              console.log(i_found_it)
           }
        });
        if(i_found_it){

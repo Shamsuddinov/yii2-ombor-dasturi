@@ -49,7 +49,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'qUUAG3hc7myk0oKZX116satvRwZtphvV',
-//            'baseUrl' => ''
+            'baseUrl' => '/web'
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -78,23 +78,18 @@ $config = [
             ],
         ],
         'db' => $db,
-//        'urlManager' => [
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-////            'rules' => [  '<controller:\w+>/<id:\d+>' => '<controller>/view',
-////                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-////                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-////            ],
-//        ],
-//        'urlManager' => [
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//            'enableStrictParsing' => false,
-//            'rules' => [
-//                'received' => 'received/index',
-//                'received/<id:\d+>' => 'brand/view',
-//            ]
-//        ],
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            // Disable index.php
+            'showScriptName' => false,
+            // Disable r= routes
+            'enablePrettyUrl' => true,
+//            'rules' => array(
+//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+//                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+//            ),
+        ],
     ],
     'as before Request' => [
         'class' => 'app\components\SetLanguages'

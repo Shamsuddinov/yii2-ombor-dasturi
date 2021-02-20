@@ -4,14 +4,14 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !^/(web)
 
-RewriteRule ^assets/(.*)$ yii3/web/assets/$1 [L]
-RewriteRule ^css/(.*)$ yii3/web/css/$1 [L]
-RewriteRule ^files/(.*)$ yii3/web/files/$1 [L]
-RewriteRule ^images/(.*)$ yii3/web/images/$1 [L]
-RewriteRule ^js/(.*)$ yii3/web/js/$1 [L]
-RewriteRule (.*) yii3/web/$1
+RewriteRule ^assets/(.*)$ web/assets/$1 [L]
+RewriteRule ^css/(.*)$ web/css/$1 [L]
+RewriteRule ^files/(.*)$ web/files/$1 [L]
+RewriteRule ^images/(.*)$ web/images/$1 [L]
+RewriteRule ^js/(.*)$ web/js/$1 [L]
+RewriteRule (.*) web/$1
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule . yii3/web/index.php
+RewriteRule . web/index.php

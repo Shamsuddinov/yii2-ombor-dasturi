@@ -1,11 +1,8 @@
 <?php
 
-use app\models\Received;
-use kartik\date\DatePicker;
+
 use yii\helpers\Html;
-//use yii\grid\GridView;
 use kartik\grid\GridView;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ReceivedSearch */
@@ -19,7 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
 
-        <!--        --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
         <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
         </div>
 
@@ -28,7 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body pt-0">
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
-//                        'filterModel' => $searchModel,
                         'tableOptions' => [
                             'id' => 'bootstrap-data-table',
                             'class' => 'table table-striped table-bordered table-hover',
@@ -41,11 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'summary' => "<b>{totalCount} ta</b> ma'lumotdan. <b>{begin} - {end} gacha</b> qismi chiqarildi.",
                         'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
                             [
                                 'attribute' => 'contragent_id',
                                 'label' => 'Yetkazib beruvchi',
                                 'value' => 'details.contragent.name',
-
+                                'pageSummary' => 'Jami :',
+                                'pageSummaryOptions' => [
+                                    'style' => 'font-size: 12px;'
+                                ]
                             ],
                             [
                                 'attribute' => 'product_id',
@@ -55,24 +54,57 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'quantity',
                                 'label' => 'Soni',
+                                'value' => function ($model) {
+                                    return floor($model['quantity']);
+                                },
                                 'headerOptions' => [
                                     'style' => 'width: 90px; max-width:110px; text-align:center;'
                                 ],
                                 'contentOptions' => [
                                     'style' => 'text-align:center;'
+                                ],
+                                'pageSummary' => true,
+                                'pageSummaryFunc' => GridView::F_SUM,
+                                'pageSummaryOptions' => [
+                                    'style' => 'font-size: 12px; text-align:center;'
                                 ]
                             ],
                             [
                                 'attribute' => 'r_price',
-                                'label' => 'Narxi'
+                                'label' => 'Narxi',
+                                'value' => function ($model) {
+                                    return floor($model['r_price']);
+                                },
+                                'contentOptions' => [
+                                    'style' => 'text-align:center;'
+                                ],
+                            ],
+                            [
+                                'attribute' => 'summa',
+                                'label' => 'Summ',
+                                'value' => function ($model){
+                                    return $model['r_price'] * $model['quantity'];
+                                },
+                                'contentOptions' => [
+                                    'style' => 'text-align:center;'
+                                ],
+                                'pageSummary' => true,
+                                'pageSummaryFunc' => GridView::F_SUM,
+                                'pageSummaryOptions' => [
+                                    'style' => 'font-size: 12px; text-align:center;'
+                                ]
                             ],
                             [
                                 'attribute' => 'date_for_search',
                                 'format' => 'date',
                                 'label' => Yii::t('app', 'Date'),
-                                'value' => 'details.date'
+                                'value' => 'details.date',
+                                'contentOptions' => [
+                                    'style' => 'text-align:center;'
+                                ],
                             ]
                         ],
+                        'showPageSummary' => true,
                         'pager' => [
                             'options' => [
                                 'class' => 'pagination',
@@ -98,6 +130,5 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
         </div>
-        <!--        --><?php //Pjax::end(); ?>
     </div>
 </div>

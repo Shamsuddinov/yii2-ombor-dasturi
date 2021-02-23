@@ -29,7 +29,7 @@ class ProductType extends BaseModel
     public function rules()
     {
         return [
-            [['name', 'cat_id'], 'required'],
+            [['name'], 'required'],
             [['cat_id', 'status'], 'integer'],
             [['name'], 'string', 'max' => 30],
             [['name'], 'unique'],

@@ -1,5 +1,6 @@
 <?php
 
+use kartik\select2\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -17,7 +18,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'cat_id')->textInput() ?>
+    <?= $form->field($model, 'cat_id')->widget(Select2::classname(), [
+        'data' => $model::getModelAsArray(new \app\models\ProductType(), 'id', 'name', [
+                'cat_id' => 0
+        ]),
+        'options' => [
+                'placeholder' => Yii::t('app', 'Select main category name if this category is sub category'),
+            'id' => 'cat_id',
+        ],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

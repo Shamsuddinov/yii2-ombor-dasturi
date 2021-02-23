@@ -74,15 +74,21 @@ class ProductTypeController extends BaseController
     {
         $model = new ProductType();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->cat_id == ''){
+                $model->setAttribute('cat_id', 0);
+            }
             $model->setAttribute('status', ProductType::STATUS_ACTIVE);
-            $model->save();
-            Yii::$app->session->setFlash('success', 'Product category successfully created');
-            return $this->redirect(['view', 'id' => $model->id]);
+            if($model->save()){
+                Yii::$app->session->setFlash('success', 'Product category successfully created');
+                return $this->redirect(Yii::$app->request->referrer);
+            }
         }
+
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', ['model' => $model]);
         }
+
         return $this->render('create', [
             'model' => $model,
         ]);

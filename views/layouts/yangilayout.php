@@ -52,6 +52,7 @@ AppAsset::register($this);
                         <li><i class="fa fa-pencil-square-o"></i><a href="<?= Url::to(['product/'])?>">Edit products</a></li>
                         <li><i class="fa fa-th-list"></i><a href="<?= Url::to(['product-type/'])?>">Edit categories</a></li>
                         <li><i class="fa fa-user"></i><a href="<?= Url::to(['contragent/'])?>">Edit counter agents</a></li>
+                        <li><i class="fa fa-user"></i><a href="<?= Url::to(['measurement/'])?>">Edit measurement</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">

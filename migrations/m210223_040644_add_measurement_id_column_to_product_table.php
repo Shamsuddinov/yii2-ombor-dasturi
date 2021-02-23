@@ -31,7 +31,7 @@ class m210223_040644_add_measurement_id_column_to_product_table extends Migratio
             'measurement_id',
             '{{%measurement}}',
             'id',
-            'CASCADE'
+//            'CASCADE'
         );
     }
 

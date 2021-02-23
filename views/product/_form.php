@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type_id')->widget(Select2::classname(), [
         'data' => $model::getModelAsArray(new \app\models\ProductType()),
-        'options' => ['placeholder' => 'Kontragentni tanlang', 'id' => 'type_id', 'required' => true],
+        'options' => ['placeholder' => Yii::t('app', 'Select the product type'), 'id' => 'type_id', 'required' => true],
         'pluginOptions' => [
             'allowClear' => true
         ],
@@ -28,13 +28,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'brand_id')->widget(Select2::classname(), [
         'data' => $model::getModelAsArray(new \app\models\Brand()),
-        'options' => ['placeholder' => 'Brandni tanlang', 'id' => 'brand_id', 'required' => true],
+        'options' => ['placeholder' => Yii::t('app', 'Select brand name'), 'id' => 'brand_id', 'required' => true],
         'pluginOptions' => [
             'allowClear' => true
         ],
     ]) ?>
 
-    <?= $form->field($model, 'properties')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'measurement_id')->widget(Select2::classname(), [
+        'data' => $model::getModelAsArray(new \app\models\Measurement()),
+        'options' => ['placeholder' => Yii::t('app', 'Select brand name'), 'id' => 'measurement_id', 'required' => true],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]) ?>
+
+    <?= $form->field($model, 'properties')->textarea(['rows' => 3]) ?>
 
 
 

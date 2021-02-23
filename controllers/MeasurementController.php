@@ -5,15 +5,15 @@ namespace app\controllers;
 use Yii;
 use app\models\Measurement;
 use app\models\MeasurementSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * MeasurementController implements the CRUD actions for Measurement model.
  */
-class MeasurementController extends Controller
+class MeasurementController extends BaseController
 {
+    public $layout = 'yangilayout';
     /**
      * {@inheritdoc}
      */
@@ -52,6 +52,12 @@ class MeasurementController extends Controller
      */
     public function actionView($id)
     {
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -67,9 +73,13 @@ class MeasurementController extends Controller
         $model = new Measurement();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(Yii::$app->request->referrer);
         }
-
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        }
         return $this->render('create', [
             'model' => $model,
         ]);
@@ -87,7 +97,12 @@ class MeasurementController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+        if(Yii::$app->request->isAjax){
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
         }
 
         return $this->render('update', [

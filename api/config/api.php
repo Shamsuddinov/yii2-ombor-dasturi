@@ -1,7 +1,7 @@
 <?php
 
 $db     = require(__DIR__ . '/../../config/db.php');
-$params = require(__DIR__ . '/params.php');
+$params = require(__DIR__ . '/../../config/params.php');
 
 $config = [
     'id' => 'basic',
@@ -14,8 +14,7 @@ $config = [
             // Enable JSON Input:
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
-            ],
-            'baseUrl' => '/api'
+            ]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -34,12 +33,12 @@ $config = [
             'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/project','v1/time', 'v1/users']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/user']],
             ],
         ],
         'db' => $db,
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Users',
             'enableAutoLogin' => false,
         ],
     ],

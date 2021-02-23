@@ -95,7 +95,7 @@ $ja= 1;
 $js = <<<JS
     jQuery('body').delegate('td.w0', 'click', function (){
         let id = $(this).parents('tr.w0').attr('data-id');
-        let url = '$url'+"&id="+id;
+        let url = '$url'+"?id="+id;
         location.href = url;
     })
 JS;

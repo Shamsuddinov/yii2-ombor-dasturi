@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property ProductType $type
  * @property Received[] $receiveds
  * @property Sold[] $solds
+ * @property Measurement[] $measurement
  */
 class Product extends BaseModel
 {
@@ -38,11 +39,12 @@ class Product extends BaseModel
     {
         return [
             [['type_id', 'name', 'brand_id'], 'required'],
-            [['type_id', 'brand_id', 'status'], 'integer'],
+            [['measurement_id','type_id', 'brand_id', 'status'], 'integer'],
             [['quantity', 'r_price'], 'number'],
             [['properties'], 'string'],
             [['name'], 'string', 'max' => 40],
             [['brand_id'], 'exist', 'skipOnError' => true, 'targetClass' => Brand::className(), 'targetAttribute' => ['brand_id' => 'id']],
+            [['measurement_id'], 'exist', 'skipOnError' => true, 'targetClass' => Measurement::className(), 'targetAttribute' => ['measurement_id' => 'id']],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductType::className(), 'targetAttribute' => ['type_id' => 'id']],
         ];
     }
@@ -54,12 +56,13 @@ class Product extends BaseModel
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'type_id' => 'Type ID',
-            'brand_id' => 'Brand ID',
-            'quantity' => 'Quantity',
-            'properties' => 'Properties',
-            'r_price' => 'R Price',
+            'name' => Yii::t('app', 'Name'),
+            'type_id' => Yii::t('app', 'Product type'),
+            'brand_id' => Yii::t('app', 'Brand'),
+            'quantity' => Yii::t('app', 'Quantity'),
+            'properties' => Yii::t('app', 'Properties'),
+            'r_price' => Yii::t('app', 'Price'),
+            'measurement_id' => Yii::t('app', 'Measurement'),
         ];
     }
 

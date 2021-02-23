@@ -12,12 +12,23 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Measurements'), 'url
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="measurement-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="col-lg-12">
+    <?php if(!Yii::$app->request->isAjax):?>
+    <div class="card">
+        <div class="card-body">
+            <div class="box-title"><?= Html::encode($this->title) ?></div>
+        </div>
+        <?php endif;?>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body pt-0">
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
-
+                </div>
+            </div>
+        </div>
+        <?php if(!Yii::$app->request->isAjax):?>
+    </div>
+<?php endif;?>
 </div>

@@ -6,85 +6,126 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Sold */
+/* @var $action app\models\Sold */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="sold-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php if ($action === 'create'): ?>
+        <?php $form = ActiveForm::begin([
+            'action' => 'save-and-finish'
+        ]); ?>
+    <?php else: ?>
+        <?php $form = ActiveForm::begin(); ?>
+    <?php endif; ?>
 
-    <?= $form->field($model, 'tabular')->widget(MultipleInput::class, [
-        'iconSource' => 'fa',
-        'cloneButton' => false,
-        'sortable' => false,
-        'min' => 1,
-        'addButtonPosition' => MultipleInput::POS_ROW,
-        'rendererClass' => \unclead\multipleinput\renderers\ListRenderer::className(),
-        'layoutConfig' => [
-            'offsetClass' => 'col-sm-offset-4',
-            'labelClass' => 'col-sm-4',
-            'wrapperClass' => 'col-sm-12',
-            'errorClass' => 'col-sm-4'
-        ],
-        'addButtonOptions' => [
-            'class' => 'add-close-button btn btn-sm btn-primary',
-        ],
-        'removeButtonOptions' => [
-            'class' => 'add-close-button btn btn-sm btn-danger',
-        ],
-        'form' => $form,
-        'columns' => [
-            [
-                'name' => 'product_id',
-                'title' => 'Product',
-                'type' => \kartik\select2\Select2::className(),
-                'options' => [
-                    'pluginOptions' => [
-                        'placeholder' => 'Select product'
+    <div class="tabular-items">
+        <?= $form->field($model, 'tabular')->widget(MultipleInput::class, [
+            'iconSource' => 'fa',
+            'cloneButton' => false,
+            'sortable' => false,
+            'min' => 1,
+            'addButtonPosition' => MultipleInput::POS_ROW,
+            'rendererClass' => \unclead\multipleinput\renderers\TableRenderer::className(),
+            'layoutConfig' => [
+                'offsetClass' => 'col-sm-offset-4',
+                'labelClass' => 'col-sm-4',
+                'wrapperClass' => 'col-sm-12',
+                'errorClass' => 'col-sm-4'
+            ],
+            'addButtonOptions' => [
+                'class' => 'add-close-button btn btn-sm btn-primary',
+            ],
+            'removeButtonOptions' => [
+                'class' => 'add-close-button btn btn-sm btn-danger',
+            ],
+            'form' => $form,
+            'columns' => [
+                [
+                    'name' => 'product_id',
+                    'title' => Yii::t('app', 'Product'),
+                    'type' => \kartik\select2\Select2::className(),
+                    'options' => [
+                        'pluginOptions' => [
+                            'placeholder' => 'Select product'
+                        ],
+                        'data' => \app\models\Product::getProductAll(),
+                        'pluginEvents' => [
+                            "change" => "function(thisItem) { jQuery(document).ready(function($) { $.fn.itemSelected(thisItem); }); }",
+                        ],
                     ],
-                    'data' => \app\models\Product::getProductAll(),
-                    'pluginEvents' => [
-                        "change" => "function(thisItem) { jQuery(document).ready(function($) { $.fn.itemSelected(thisItem); }); }",
+                    'headerOptions' => [
+                        "style" => "border: none; width: 33%;"
                     ]
                 ],
-            ],
-            [
-                'name' => 'custom',
-                'options' => [
-                    'required' => true,
-                    'placeholder' => "Nechta olmoqchisiz"
+                [
+                    'name' => 'quantity',
+                    'title' => Yii::t('app', 'Quantity'),
+                    'options' => [
+                        'required' => true,
+                        'placeholder' => "Nechta olmoqchisiz",
+                        'class' => 'd-none form-control input-items',
+                        'type' => 'number',
+                        'autocomplete' => false,
+                    ],
+                    'headerOptions' => [
+                        "style" => "border: none; width: 33%;"
+                    ]
                 ],
-                'inputTemplate' => "<div class='container'>
+                [
+                    'name' => 'custom',
+                    'title' => Yii::t('app', 'Price and quantity'),
+                    'options' => [
+                        'required' => true,
+                        'placeholder' => "Nechta olmoqchisiz"
+                    ],
+                    'inputTemplate' => "<div class='container'>
                                         <div class='row'>
                                            <div class='col-6 input-price'></div>
                                            <div class='col-6 input-quantity'></div>
                                         </div>
-                                    </div>"
-            ],
-            [
-                'name' => 'quantity',
-                'options' => [
-                    'required' => true,
-                    'placeholder' => "Nechta olmoqchisiz",
-                    'class' => 'd-none form-control input-items',
-                    'type' => 'number',
-                    'autocomplete' => false,
+                                    </div>",
+                    'headerOptions' => [
+                        "style" => "border: none; width: 30%;"
+                    ]
                 ],
             ],
-        ],
-    ])->label(false); ?>
-    <div class='row'>
-        <div class='offset-8 col-4 input-summary d-none'></div>
+        ])->label(false); ?>
+        <div class='row'>
+            <div class='offset-8 col-4 input-summary d-none'></div>
+        </div>
     </div>
 
+    <div class="summary-list d-none" style="font-size: 13px;">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>Nomi</th>
+                <th>Soni</th>
+                <th>Narxi</th>
+                <th>Summasi</th>
+            </tr>
+            </thead>
+            <tbody class="table-rows">
+
+            </tbody>
+            <tbody>
+            <tr>
+                <td colspan="1"><b>Jami: </b></td>
+                <td id="total-count"></td>
+                <td colspan="2" style="text-align: right" id="total-sum"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <button id="show-check" class="btn btn-success"><?= Yii::t('app', 'Save') ?></button>
+        <button id="edit-some-items" class="btn btn-info d-none"><?= Yii::t('app', 'Edit') ?></button>
+        <?= Html::submitButton('Save and finish', ['class' => 'btn btn-success d-none', 'id' => 'save-and-finish']) ?>
     </div>
-
     <?php ActiveForm::end(); ?>
-
 </div>
-
 <?php
 $url = \yii\helpers\Url::to(['sold/price-and-quantity']);
 $price_text = Yii::t('app', 'Price');
@@ -98,7 +139,7 @@ $js = <<<JS
         let productId = $("select#sold-tabular-"+ id +"-product_id").val();
         let price_and_quantity = $("div.field-sold-tabular-"+ id +"-custom");
         let quantity_field = $("#sold-tabular-"+ id +"-quantity");
-        let url = "$url" + "&id=" + productId;
+        let url = "$url" + "?id=" + productId;
         $.ajax({
             url: url,
             type: "POST",
@@ -106,8 +147,8 @@ $js = <<<JS
                 if(response.status){
                     let product = response.result;
                     if(product.quantity > 0 && product.price > 0){
-                        price_and_quantity.find('.input-price').html("<div style='font-weight:bold;'>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price * 1.1) + "</span>"  + "</div>");
-                        price_and_quantity.find('.input-quantity').html("<div style='font-weight:bold;'>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");
+                        price_and_quantity.find('.input-price').html("<div>$price_text : " + "<span class='input-price-value'>" + Math.floor(product.price * 1.1) + "</span>"  + "</div>");
+                        price_and_quantity.find('.input-quantity').html("<div>$quantity_text : " + "<span class='input-quantity-value'>" + Math.floor(product.quantity) + "</span>" + "</div>");
                         quantity_field.attr('max', Math.floor(product.quantity));
                         if(quantity_field.hasClass('d-none')){
                             quantity_field.removeClass('d-none');
@@ -141,24 +182,50 @@ $js = <<<JS
     }
     $.fn.changeSummary = function() {
         let sum = 0;
+        let totalCount = 0;
+        let table_rows = $('.table-rows');
+        if(table_rows.children().length !== 0){
+            table_rows[0].innerText = '';
+        }
+        
         $('.input-items').map((id, item) => {
             let price = $(".input-price-value")[id].innerText * 1;
             let quantity = $(".input-quantity-value")[id].innerText * 1;
             let itemvalue = $(item).val() * 1;
+            let product_name = $('#select2-sold-tabular-' + id +'-product_id-container');
+           
             if(quantity >= itemvalue){
                 $(item).removeAttr('css').css('color', '#495057');
                 sum += itemvalue * price;
+                totalCount += itemvalue;
+                table_rows.append(
+                    "<tr> <td>"+ product_name[0].innerText +"</td> <td>" + itemvalue + "</td> <td>" + price + "</td> <td>" + itemvalue * price + "</td> </tr>"
+                );
             } else {
                 $(item).val(quantity).removeAttr('css').css('color', 'red');
                 sum += quantity * price;
+                totalCount += quantity;
+                table_rows.append(
+                    "<tr> <td>"+ product_name[0].innerText +"</td> <td>" + quantity + "</td> <td>" + price + "</td> <td>" + quantity * price + "</td> </tr>"
+                );
             }
         });
+        $('#total-count')[0].innerText = totalCount;
+        $('#total-sum')[0].innerText = sum;
         $('.input-summary').html("Jami summa: " + sum).removeClass('d-none');      
     }
+    
     $('#w1').on('afterDeleteRow', function(e, row, currentIndex) { 
+        console.log(e);
         $.fn.changeSummary();
      });
-    $('.sold-form').delegate('.input-items', 'blur', function() { $.fn.changeSummary() });
+    $('.form-group').delegate('#show-check, #edit-some-items', 'click', function(event) {
+        event.preventDefault();
+        $('#edit-some-items, .summary-list, .tabular-items, #save-and-finish, #show-check').toggleClass('d-none');
+    });
+    $('.sold-form').delegate('.input-items', 'blur', function() { 
+        $.fn.changeSummary();
+    });
 JS;
 $this->registerJs($js);
 ?>

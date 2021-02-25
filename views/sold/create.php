@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body pt-0">
                     <?= $this->render('_form', [
                         'model' => $model,
+                        'action' => Yii::$app->controller->action->id
                     ]) ?>
                 </div>
             </div>

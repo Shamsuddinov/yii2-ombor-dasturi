@@ -149,6 +149,13 @@ class SoldController extends BaseController
         return $response;
     }
 
+    public function actionSaveAndFinish(){
+        echo "<pre>";
+        print_r(Yii::$app->request->post());
+        echo "</pre>";
+        exit();
+    }
+
     /**
      * Updates an existing Sold model.
      * If update is successful, the browser will be redirected to the 'view' page.

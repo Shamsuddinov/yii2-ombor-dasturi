@@ -185,40 +185,40 @@ $js = <<<JS
         let totalCount = 0;
         let table_rows = $('.table-rows');
         if(table_rows.children().length !== 0){
-            table_rows[0].innerText = '';
+            table_rows.empty();
         }
-        
-        $('.input-items').map((id, item) => {
-            let price = $(".input-price-value")[id].innerText * 1;
-            let quantity = $(".input-quantity-value")[id].innerText * 1;
-            let itemvalue = $(item).val() * 1;
-            let product_name = $('#select2-sold-tabular-' + id +'-product_id-container');
-           
-            if(quantity >= itemvalue){
-                $(item).removeAttr('css').css('color', '#495057');
-                sum += itemvalue * price;
-                totalCount += itemvalue;
+        $('.multiple-input-list__item').map((id, item) => {
+            let this_item = $(item);
+            let product_name = this_item.find('.select2-selection__rendered').text();
+            let quantity = this_item.find(".input-quantity-value").text() * 1;
+            let price = this_item.find('.input-price-value').text() * 1;
+            let input_field = this_item.find('.input-items');
+            let input_value = input_field.val() * 1;
+            if(quantity >= input_value){
+                input_field.removeAttr('css').css('color', '#495057');
+                sum += input_value * price;
+                totalCount += input_value;
                 table_rows.append(
-                    "<tr> <td>"+ product_name[0].innerText +"</td> <td>" + itemvalue + "</td> <td>" + price + "</td> <td>" + itemvalue * price + "</td> </tr>"
+                    "<tr> <td>"+ product_name +"</td> <td>" + input_value + "</td> <td>" + price + "</td> <td>" + input_value * price + "</td> </tr>"
                 );
             } else {
-                $(item).val(quantity).removeAttr('css').css('color', 'red');
+                input_field.val(quantity).removeAttr('css').css('color', 'red');
                 sum += quantity * price;
                 totalCount += quantity;
                 table_rows.append(
-                    "<tr> <td>"+ product_name[0].innerText +"</td> <td>" + quantity + "</td> <td>" + price + "</td> <td>" + quantity * price + "</td> </tr>"
+                    "<tr> <td>"+ product_name +"</td> <td>" + quantity + "</td> <td>" + price + "</td> <td>" + quantity * price + "</td> </tr>"
                 );
             }
         });
-        $('#total-count')[0].innerText = totalCount;
-        $('#total-sum')[0].innerText = sum;
+        $('#total-count').text(totalCount);
+        $('#total-sum').text(sum);
         $('.input-summary').html("Jami summa: " + sum).removeClass('d-none');      
     }
     
-    $('#w1').on('afterDeleteRow', function(e, row, currentIndex) { 
-        console.log(e);
+    $('#w1').on('afterDeleteRow', function(event) {
         $.fn.changeSummary();
-     });
+    })
+
     $('.form-group').delegate('#show-check, #edit-some-items', 'click', function(event) {
         event.preventDefault();
         $('#edit-some-items, .summary-list, .tabular-items, #save-and-finish, #show-check').toggleClass('d-none');

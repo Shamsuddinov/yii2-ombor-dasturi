@@ -100,12 +100,12 @@ use yii\widgets\ActiveForm;
     <div class="summary-list d-none" style="font-size: 13px;">
         <table class="table table-hover table-bordered">
             <thead>
-            <tr>
-                <th>Nomi</th>
-                <th>Soni</th>
-                <th>Narxi</th>
-                <th>Summasi</th>
-            </tr>
+                <tr>
+                    <th>Nomi</th>
+                    <th>Soni</th>
+                    <th>Narxi</th>
+                    <th>Summasi</th>
+                </tr>
             </thead>
             <tbody class="table-rows">
 
@@ -122,7 +122,8 @@ use yii\widgets\ActiveForm;
     <div class="form-group">
         <button id="show-check" class="btn btn-success"><?= Yii::t('app', 'Save') ?></button>
         <button id="edit-some-items" class="btn btn-info d-none"><?= Yii::t('app', 'Edit') ?></button>
-        <?= Html::submitButton('Save and finish', ['class' => 'btn btn-success d-none', 'id' => 'save-and-finish']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save and finish'), ['class' => 'btn btn-success d-none', 'id' => 'save-and-finish']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Print check'), ['class' => 'btn btn-success d-none', 'id' => 'printIt']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>
@@ -218,14 +219,28 @@ $js = <<<JS
     $('#w1').on('afterDeleteRow', function(event) {
         $.fn.changeSummary();
     })
-
     $('.form-group').delegate('#show-check, #edit-some-items', 'click', function(event) {
         event.preventDefault();
-        $('#edit-some-items, .summary-list, .tabular-items, #save-and-finish, #show-check').toggleClass('d-none');
+        let input_items = $('.multiple-input-list__item');
+        if(input_items.find('.input-items').hasClass('d-none') || (input_items.find('.input-items').val() === "" || input_items.find('.input-items').val() <= 0)){
+            input_items.find('.selection').focus();
+        } else {
+            $('#edit-some-items, .summary-list, .tabular-items, #save-and-finish, #show-check, #printIt').toggleClass('d-none');         
+        }
     });
     $('.sold-form').delegate('.input-items', 'blur', function() { 
         $.fn.changeSummary();
     });
+    $('#printIt').click(function() {
+       $.fn.printInvoice();
+    });
+    $.fn.printInvoice = function (){
+         $('#save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();                     
+         $('div.right-panel').removeAttr('id').removeClass('right-panel');                     
+         $('div.animated, div.card').removeAttr('id').removeAttr('class');                     
+         window.print();
+         location.reload();
+    }
 JS;
 $this->registerJs($js);
 ?>

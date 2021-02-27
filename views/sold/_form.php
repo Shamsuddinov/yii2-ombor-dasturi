@@ -222,7 +222,7 @@ $js = <<<JS
     $('.form-group').delegate('#show-check, #edit-some-items', 'click', function(event) {
         event.preventDefault();
         let input_items = $('.multiple-input-list__item');
-        if(input_items.find('.input-items').hasClass('d-none') || (input_items.find('.input-items').val() === "" || input_items.find('.input-items').val() <= 0)){
+        if((input_items.find('.input-items').hasClass('d-none') && (input_items.find('.input-items').val() === "" || input_items.find('.input-items').val() <= 0))){
             input_items.find('.selection').focus();
         } else {
             $('#edit-some-items, .summary-list, .tabular-items, #save-and-finish, #show-check, #printIt').toggleClass('d-none');         

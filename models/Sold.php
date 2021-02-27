@@ -13,7 +13,7 @@ use Yii;
  * @property float|null $s_price
  * @property int|null $seller_id
  * @property int|null $product_id
- *
+ * @property int|null $invoice_id
  * @property Product $product
  * @property Users $seller
  */
@@ -41,6 +41,7 @@ class Sold extends BaseModel
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             [['seller_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['seller_id' => 'id']],
+            [['invoice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['invoice_id' => 'id']],
         ];
     }
 
@@ -50,12 +51,13 @@ class Sold extends BaseModel
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'date' => 'Date',
-            'quantity' => 'Quantity',
-            's_price' => 'S Price',
-            'seller_id' => 'Seller ID',
-            'product_id' => 'Product ID',
+            'id' => Yii::t('app', 'ID'),
+            'date' => Yii::t('app', 'Date'),
+            'quantity' => Yii::t('app', 'Quantity'),
+            's_price' => Yii::t('app', 'Price'),
+            'seller_id' => Yii::t('app', 'Seller ID'),
+            'product_id' => Yii::t('app', 'Product ID'),
+            'invoice_id' => Yii::t('app', 'Invoice ID'),
         ];
     }
 
@@ -82,5 +84,9 @@ class Sold extends BaseModel
     public function getDepartment()
     {
         return $this->hasOne(Department::className(), ['id' => 'department_id']);
+    }
+    public function getInvoice()
+    {
+        return $this->hasOne(Invoice::className(), ['id' => 'invoice_id']);
     }
 }

@@ -18,6 +18,7 @@ class InvoiceSearch extends Invoice
     {
         return [
             [['id', 'department_id', 'sum', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['department_name', 'user_name'], 'safe']
         ];
     }
 
@@ -39,23 +40,46 @@ class InvoiceSearch extends Invoice
      */
     public function search($params)
     {
-        $query = Invoice::find();
-
-        // add conditions that should always apply here
+        $query = Invoice::find()->joinWith(['department', 'user']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'id' => [
+                        'asc' => ['id' => SORT_ASC],
+                        'desc' => ['id' => SORT_DESC],
+                    ],
+                    'sum' => [
+                        'asc' => ['sum' => SORT_ASC],
+                        'desc' => ['sum' => SORT_DESC],
+                    ],
+                    'status' => [
+                        'asc' => ['status' => SORT_ASC],
+                        'desc' => ['status' => SORT_DESC],
+                    ],
+                    'user_name' => [
+                        'asc' => ['users.username' => SORT_ASC],
+                        'desc' => ['users.username' => SORT_DESC],
+                    ],
+                    'department_name' => [
+                        'asc' => ['department.name' => SORT_ASC],
+                        'desc' => ['department.name' => SORT_DESC],
+                    ],
+                ],
+            ]
         ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'department_id' => $this->department_id,
@@ -66,6 +90,10 @@ class InvoiceSearch extends Invoice
             'updated_by' => $this->updated_by,
             'updated_at' => $this->updated_at,
         ]);
+
+        $query->andFilterWhere(['like', 'department.name', $this->department_name]);
+        $query->andFilterWhere(['like', 'users.username', $this->user_name]);
+
 
         return $dataProvider;
     }

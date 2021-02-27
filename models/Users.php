@@ -14,7 +14,8 @@ use yii\web\IdentityInterface;
  * @property string|null $sur_name
  * @property string|null $username
  * @property string|null $password
- *
+ * @property int|null $department_id
+ * @property Department[] $department
  * @property Received[] $receiveds
  * @property Sold[] $solds
  */

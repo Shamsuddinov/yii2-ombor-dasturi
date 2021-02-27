@@ -33,11 +33,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             'id',
+                            'invoice_id',
+                            [
+                                'label' => Yii::t('app', 'Product name'),
+                                'value' => $model->product->name
+                            ],
                             'date',
                             'quantity',
                             's_price',
-                            'seller_id',
-                            'product_id',
+                            'seller.first_name',
+                            'department.name',
                         ],
                     ]) ?>
                 </div>

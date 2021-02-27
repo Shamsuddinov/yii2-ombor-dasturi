@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\BaseModel;
+use app\models\Invoice;
 use app\models\Product;
 use app\models\ProductBalance;
 use Yii;
@@ -99,46 +100,60 @@ class SoldController extends BaseController
     public function actionSaveAndFinish(){
         if(Yii::$app->request->isPost){
             $post_items = Yii::$app->request->post()['Sold']['tabular'];
+            $department_id = Yii::$app->user->identity->department_id;
             $transaction = Yii::$app->db->beginTransaction();
             $saved = false;
             try {
-                foreach ($post_items as $post_item){
-                    $product = Product::find()->where(['id' => $post_item['product_id']])->asArray()->one();
-                    if($product){
-                        $product_balance = ProductBalance::find()
-                            ->where(['and',
-                                ['department_id' => Yii::$app->user->identity->department_id],
-                                ['product_id' => $post_item['product_id']],
-                            ])
-                            ->andWhere(['>','quantity', $post_item['quantity']])
-                            ->one();
-                        $product_balance->setAttributes([
-                            'quantity' => $product_balance['quantity'] - $post_item['quantity']
-                        ]);
-
-                        if($product_balance->save()){
-                            $selled_product = new Sold();
-                            $price_i = $product_balance['price'] * 1.1;
-
-                            $selled_product->setAttributes([
-                                'date' => date('Y-m-d h:i:s'),
-                                'quantity' => $post_item['quantity'],
-                                's_price' => $price_i,
-                                'seller_id' => Yii::$app->user->id,
-                                'product_id' => $product['id'],
-                                'status' => Sold::STATUS_INACTIVE,
-                                'department_id' => Yii::$app->user->identity->department_id
+                $invoice = new Invoice();
+                $invoice->setAttributes([
+                    'department_id' => $department_id,
+                    'sum' => 0,
+                    'status' => Invoice::STATUS_ACTIVE
+                ]);
+                if($invoice->save()){
+                    foreach ($post_items as $post_item){
+                        $product = Product::find()->where(['id' => $post_item['product_id']])->asArray()->one();
+                        if($product){
+                            $product_balance = ProductBalance::find()
+                                ->where(['and',
+                                    'department_id' => $department_id,
+                                    ['product_id' => $post_item['product_id']]
+                                ])
+                                ->andWhere(['>','quantity', $post_item['quantity']])
+                                ->one();
+                            $product_balance->setAttributes([
+                                'quantity' => $product_balance['quantity'] - $post_item['quantity']
                             ]);
 
-                            if($selled_product->save()){
-                                $saved = true;
+                            if($product_balance->save()){
+                                $selled_product = new Sold();
+                                $price_i = $product_balance['price'] * 1.1;
+
+                                $selled_product->setAttributes([
+                                    'date' => date('Y-m-d h:i:s'),
+                                    'quantity' => $post_item['quantity'],
+                                    's_price' => $price_i,
+                                    'seller_id' => Yii::$app->user->id,
+                                    'product_id' => $product['id'],
+                                    'status' => Sold::STATUS_INACTIVE,
+                                    'department_id' => $department_id,
+                                    'invoice_id' => $invoice->id
+                                ]);
+
+                                if($selled_product->save()){
+                                    $saved = true;
+                                } else {
+                                    BaseModel::getErrorMessages(false, $selled_product->errors);
+                                    $saved = false;
+                                    break;
+                                }
                             } else {
-                                $saved = false;
-                                break;
+                                BaseModel::getErrorMessages(false, $product_balance->errors);
                             }
                         }
                     }
                 }
+
                 if($saved){
                     BaseModel::getMessages(true, 'updated');
                     $transaction->commit();
@@ -148,6 +163,7 @@ class SoldController extends BaseController
                     $transaction->rollBack();
                 }
             } catch (\Exception | \Throwable $exception){
+                BaseModel::getErrorMessages(false, $exception);
                 $transaction->rollBack();
             }
         }

@@ -21,6 +21,8 @@ use Yii;
  */
 class Invoice extends \app\models\BaseModel
 {
+    public $department_name;
+    public $user_name;
     /**
      * {@inheritdoc}
      */
@@ -37,6 +39,7 @@ class Invoice extends \app\models\BaseModel
         return [
             [['department_id', 'sum', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['sum'], 'required'],
+            [['department_name', 'user_name'], 'safe'],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
         ];
     }
@@ -49,6 +52,8 @@ class Invoice extends \app\models\BaseModel
         return [
             'id' => Yii::t('app', 'ID'),
             'department_id' => Yii::t('app', 'Department ID'),
+            'department_name' => Yii::t('app', 'Department name'),
+            'user_name' => Yii::t('app', 'Seller'),
             'sum' => Yii::t('app', 'Sum'),
             'status' => Yii::t('app', 'Status'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -66,6 +71,11 @@ class Invoice extends \app\models\BaseModel
     public function getDepartment()
     {
         return $this->hasOne(Department::className(), ['id' => 'department_id']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'created_by']);
     }
 
     /**

@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class InvoiceController extends Controller
 {
+    public $layout = 'yangilayout';
     /**
      * {@inheritdoc}
      */

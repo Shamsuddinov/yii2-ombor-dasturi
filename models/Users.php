@@ -55,13 +55,13 @@ class Users extends BaseModel implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'first_name' => 'First Name',
-            'sur_name' => 'Sur Name',
-            'username' => 'Login',
-            'password' => 'Password',
-            'rules' => 'Rules',
-            'department_id' => 'Department id',
+            'id' => Yii::t('app', 'ID'),
+            'first_name' => Yii::t('app', 'Firstname'),
+            'sur_name' => Yii::t('app', 'Surname'),
+            'username' => Yii::t('app', 'Login'),
+            'password' => Yii::t('app', 'Password'),
+            'rules' => Yii::t('app', 'Rules'),
+            'department_id' => Yii::t('app', 'Department'),
         ];
     }
     public function getUserRules()

@@ -157,7 +157,7 @@ class SoldController extends BaseController
                 if($saved){
                     BaseModel::getMessages(true, 'updated');
                     $transaction->commit();
-                    return $this->redirect(['sold/index']);
+                    return $this->redirect(['invoice/view', 'id' => $invoice->id]);
                 } else {
                     BaseModel::getMessages(false);
                     $transaction->rollBack();

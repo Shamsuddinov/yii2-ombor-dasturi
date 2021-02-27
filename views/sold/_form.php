@@ -123,7 +123,6 @@ use yii\widgets\ActiveForm;
         <button id="show-check" class="btn btn-success"><?= Yii::t('app', 'Save') ?></button>
         <button id="edit-some-items" class="btn btn-info d-none"><?= Yii::t('app', 'Edit') ?></button>
         <?= Html::submitButton(Yii::t('app', 'Save and finish'), ['class' => 'btn btn-success d-none', 'id' => 'save-and-finish']) ?>
-        <?= Html::submitButton(Yii::t('app', 'Print check'), ['class' => 'btn btn-success d-none', 'id' => 'printIt']) ?>
     </div>
     <?php ActiveForm::end(); ?>
 </div>
@@ -231,16 +230,6 @@ $js = <<<JS
     $('.sold-form').delegate('.input-items', 'blur', function() { 
         $.fn.changeSummary();
     });
-    $('#printIt').click(function() {
-       $.fn.printInvoice();
-    });
-    $.fn.printInvoice = function (){
-         $('#save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();                     
-         $('div.right-panel').removeAttr('id').removeClass('right-panel');                     
-         $('div.animated, div.card').removeAttr('id').removeAttr('class');                     
-         window.print();
-         location.reload();
-    }
 JS;
 $this->registerJs($js);
 ?>

@@ -53,8 +53,15 @@ class InvoiceController extends Controller
      */
     public function actionView($id)
     {
+        $model = Invoice::find()->joinWith([
+            'solds',
+            'user',
+            'department',
+            'solds.product',
+            'solds.product.measurement'])->where(['invoice.id' => $id])->asArray()->one();
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

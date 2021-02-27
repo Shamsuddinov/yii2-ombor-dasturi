@@ -96,6 +96,11 @@ class Product extends BaseModel
         return $this->hasMany(Received::className(), ['product_id' => 'id']);
     }
 
+    public function getMeasurement()
+    {
+        return $this->hasOne(Measurement::className(), ['id' => 'measurement_id']);
+    }
+
     /**
      * Gets query for [[Solds]].
      *

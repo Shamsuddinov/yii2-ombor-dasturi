@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card">
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
-            <?= Html::a(Yii::t('app', 'Create Auth Item'),  ['create'], ['class' => 'btn btn-success p-1',
+            <?= Html::a(Yii::t('app', 'Sell product'),  ['create'], ['class' => 'btn btn-success p-1',
                 'style' => 'font-size:12px;',
                 'title' => Yii::t('app', 'Create')
             ]) ?>

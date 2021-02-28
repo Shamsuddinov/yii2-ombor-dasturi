@@ -1,7 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\InvoiceSearch */
@@ -14,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card">
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
-            <?= Html::a(Yii::t('app', 'Add new brand'), ['create'], ['class' => 'btn btn-success p-1 show-modal',
+            <?= Html::a(Yii::t('app', 'Sell product'), ['sold/create'], ['class' => 'btn btn-success p-1',
                 'style' => 'font-size:12px;',
                 'title' => Yii::t('app', 'Create a new brand')
             ]) ?>
@@ -28,15 +29,35 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= GridView::widget([
                         'dataProvider' => $dataProvider,
                         'filterModel' => $searchModel,
+                        'rowOptions' => function($model){
+                            return ['data-id' => $model->id];
+                        },
+                        'tableOptions' => [
+                            'class' => 'table table-hover',
+                            'style' => 'cursor: pointer;'
+                        ],
                         'columns' => [
 //                            ['class' => 'yii\grid\SerialColumn'],
-                            'id',
+                            [
+                                'attribute' => 'id',
+                                'label' => '#',
+                                'format' => 'raw',
+                                'value' => function ($model) {
+                                    return Html::a($model->id, Url::to(['invoice/view', 'id' => $model->id]));
+                                },
+                                'contentOptions' => [
+                                    'style' => 'vertical-align:inherit; width:5%; text-align:center;',
+                                ],
+                                'headerOptions' => [
+                                    'style' => 'text-align:center;'
+                                ]
+                            ],
                             [
                                 'attribute' => 'department_name',
                                 'value' => 'department.name',
                             ],
-                            'sum',
-                            'status',
+//                            'sum',
+//                            'status',
                             [
                                 'attribute' => 'user_name',
                                 'value' => 'user.username'
@@ -53,18 +74,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'style' => 'width:20px; color: red;'
                                 ],
                                 'buttons' => [
-                                    'view' => function ($url) {
-                                        return Html::a('<span class="fa fa-eye"></span>', $url, [
-                                            'class' => 'view-modal btn btn-sm btn-success show-modal',
-                                            'title' => Yii::t('app', 'Product information')
-                                        ]);
-                                    },
-                                    'update' => function ($url) {
-                                        return Html::a('<span class="fa fa-pencil"></span>', $url, [
-                                            'class' => 'update-modal btn btn-sm btn-primary show-modal',
-                                            'title' => Yii::t('app', 'Update product')
-                                        ]) ;
-                                    },
+//                                    'view' => function ($url) {
+//                                        return Html::a('<span class="fa fa-eye"></span>', $url, [
+//                                            'class' => 'view-modal btn btn-sm btn-success',
+//                                            'title' => Yii::t('app', 'Product information')
+//                                        ]);
+//                                    },
+//                                    'update' => function ($url) {
+//                                        return Html::a('<span class="fa fa-pencil"></span>', $url, [
+//                                            'class' => 'update-modal btn btn-sm btn-primary',
+//                                            'title' => Yii::t('app', 'Update product')
+//                                        ]) ;
+//                                    },
                                     'delete' => function ($url) {
                                         return Html::a('<span class="fa fa-trash"></span>', $url, [
                                             'class' => 'delete-button-ajax btn btn-sm btn-danger',
@@ -101,3 +122,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <!--        --><?php //Pjax::end(); ?>
     </div>
 </div>
+<?php
+$url = Url::to(['invoice/view']);
+$ja= 1;
+$js = <<<JS
+    jQuery('body').delegate('td.w0', 'click', function (){
+        let id = $(this).parents('tr.w0').attr('data-id');
+        let url = '$url'+"?id="+id;
+        location.href = url;
+    })
+JS;
+$this->registerJs($js);
+?>

@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-12">
                 <div class="card-body pt-0">
                     <p>
+                        <a href="<?= \yii\helpers\Url::to(['invoice/index']) ?>" class="btn btn-primary" id="back-to-invoice"><?= Yii::t('app', 'Back') ?></a>
                         <button class="btn btn-success" id="printIt"><?= Yii::t('app', 'Print') ?></button>
                     </p>
                     <?php endif;?>
@@ -80,9 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
            $.fn.printInvoice();
         });
         $.fn.printInvoice = function (){
-             $('#save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();                     
-             $('div.right-panel').removeAttr('id').removeClass('right-panel');                     
-             $('div.animated, div.card').removeAttr('id').removeAttr('class');                     
+             $('#back-to-invoice, #save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();
+             $('div.right-panel').removeAttr('id').removeClass('right-panel');
+             $('div.animated, div.card').removeAttr('id').removeAttr('class');
              window.print();
              location.reload();
         }

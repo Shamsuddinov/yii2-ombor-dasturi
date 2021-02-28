@@ -42,7 +42,8 @@ AppAsset::register($this);
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-folder-o"></i>Products</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-exchange"></i><a href="<?= Url::to(['details/'])?>">Received products</a></li>
-                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['sold/'])?>">Selled products</a></li>
+                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['sold/'])?>">Sell products</a></li>
+                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['invoice/'])?>">Invoice</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">

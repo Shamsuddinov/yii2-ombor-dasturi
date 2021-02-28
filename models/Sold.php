@@ -55,9 +55,10 @@ class Sold extends BaseModel
             'date' => Yii::t('app', 'Date'),
             'quantity' => Yii::t('app', 'Quantity'),
             's_price' => Yii::t('app', 'Price'),
-            'seller_id' => Yii::t('app', 'Seller ID'),
-            'product_id' => Yii::t('app', 'Product ID'),
+            'seller_id' => Yii::t('app', 'Seller'),
+            'product_id' => Yii::t('app', 'Product'),
             'invoice_id' => Yii::t('app', 'Invoice ID'),
+            'department_id' => Yii::t('app', 'Department'),
         ];
     }
 

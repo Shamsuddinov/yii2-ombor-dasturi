@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
             </div>
             <div class="col-4">
-                <?= date("Y-m-d h:i:sa") ?>
+                <?= date("d-m-Y h:i:s") ?>
             </div>
         </div>
         <div class="row">

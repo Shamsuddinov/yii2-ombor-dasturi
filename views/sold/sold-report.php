@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
             </div>
             <div class="col-4">
-                <?= date("Y-m-d h:i:sa") ?>
+                <?= date("d-m-Y h:i:s") ?>
             </div>
         </div>
         <div class="row">
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td><?=floor($items['s_price'])?></td>
                                 <td><?=floor($items['quantity'])?></td>
                                 <td><?=$items['quantity'] * $items['s_price']?></td>
-                                <td><?=$items['date']?></td>
+                                <td><?=date('d-m-Y', strtotime($items['date']))?></td>
                             </tr>
                         <?php
                             $sum += $items['s_price'] * $items['quantity'];

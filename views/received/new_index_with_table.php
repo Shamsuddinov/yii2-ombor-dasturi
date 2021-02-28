@@ -14,15 +14,22 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="col-lg-12">
     <div class="card">
-        <div class="card-body">
-            <div class="box-title"><?= Html::encode($this->title) ?></div>
-
-                    <?php Pjax::begin(['id' => 'pjaxa']); ?>
-            <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
+        <div class="items-does-not-print">
+            <div class="card-body">
+                <div class="box-title"><?= Html::encode($this->title) ?></div>
+                <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
+            </div>
         </div>
-        <p class="text-dark pl-4">
-            Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
-        </p>
+        <?php Pjax::begin(['id' => 'pjaxa']); ?>
+
+        <div class="row" style="font-size: 12px;">
+            <div class="col-8 text-dark pl-lg-5" style="vertical-align: center;">
+                Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
+            </div>
+            <div class="col-4">
+                <?= date("d-m-Y h:i:s") ?>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body pt-0">
@@ -51,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <td><?= floor($items['quantity']) ?></td>
                                 <td><?= floor($items['r_price']) ?></td>
                                 <td><?= $items['r_price'] * $items['quantity'] ?></td>
-                                <td><?= $items['details']['date'] ?></td>
+                                <td><?= date('d-m-Y', strtotime($items['details']['date'])) ?></td>
                             </tr>
                         <?php
                             $quantity += floor($items['quantity']);
@@ -59,10 +66,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             endforeach;
                         ?>
                         <tr>
-                            <td colspan="3"></td>
-                            <td colspan="1">Jami soni : <?= $quantity ?></td>
+                            <td colspan="3"><?= Yii::t('app', 'Summary :') ?></td>
+                            <td colspan="1"><?= $quantity ?></td>
                             <td colspan="1"></td>
-                            <td colspan="1">Jami summa : <?= $sum ?></td>
+                            <td colspan="1"><?= $sum ?></td>
                             <td colspan="1"></td>
                         </tr>
                         </tbody>
@@ -73,3 +80,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php Pjax::end(); ?>
     </div>
 </div>
+<?php
+$js = <<<JS
+        $('#printIt').click(function() {
+           $.fn.printInvoice();
+        });
+        $.fn.printInvoice = function (){
+             $('.items-does-not-print, #back-to-invoice, #save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();
+             $('div.right-panel').removeAttr('id').removeClass('right-panel');
+             $('div.animated, div.card').removeAttr('id').removeAttr('class');
+             window.print();
+             location.reload();
+        }
+JS;
+$this->registerJs($js);
+?>

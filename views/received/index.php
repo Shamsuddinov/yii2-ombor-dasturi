@@ -102,12 +102,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'pickerIcon' => '<i class="fa fa-calendar text-primary"></i>',
                                     'layout' => "{picker}{input}{remove}",
                                     'pluginOptions' => [
-                                        'format' => 'yyyy-mm-dd',
+                                        'format' => 'd-m-Y',
                                         'autoClose' => true
                                     ],
                                 ])
                                 ,
-                                'value' => 'details.date'
+                                'value' => function($model){
+                                    return date('d-m-Y', strtotime($model->details->date));
+                                }
                             ],
                             [
                                     'header' => 'Boshqarish',

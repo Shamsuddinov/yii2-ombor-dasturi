@@ -61,6 +61,10 @@ class ReceivedSearch extends Received
     {
         if($isArray){
             $query = Received::find()
+                ->select([
+                    '(received.r_price * received.quantity) as summa',
+                    'received.*'
+                ])
                 ->joinWith(['product', 'details.contragent', 'details.department'])
                 ->asArray();
             $this->load($params);
@@ -68,9 +72,9 @@ class ReceivedSearch extends Received
             $query->andFilterWhere([
                 'received.id' => $this->id,
                 'receiver_id' => $this->receiver_id,
-                'product_id' => $this->product_id,
-                'r.quantity' => $this->quantity,
-                'r.r_price' => $this->r_price,
+                'received.product_id' => $this->product_id,
+                'received.quantity' => $this->quantity,
+                'received.r_price' => $this->r_price,
                 'contragent_id' => $this->contragent_id
             ]);
             $dataProvider = new ArrayDataProvider([
@@ -113,8 +117,8 @@ class ReceivedSearch extends Received
                             'label' => Yii::t('app', 'Document ID')
                         ],
                         'summa' => [
-//                            'asc' => ['details_id' => SORT_ASC, 'date' => SORT_DESC],
-//                            'desc' => ['details_id' => SORT_DESC, 'date' => SORT_DESC],
+                            'asc' => ['summa' => SORT_ASC],
+                            'desc' => ['summa' => SORT_DESC],
                             'label' => Yii::t('app', 'Sum')
                         ]
                     ],

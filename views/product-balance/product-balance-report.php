@@ -14,15 +14,21 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="col-lg-12">
     <div class="card">
-        <div class="card-body">
-            <div class="box-title"><?= Html::encode($this->title) ?></div>
-
-            <!--            --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
-            <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
+        <div class="items-does-not-print">
+            <div class="card-body">
+                <div class="box-title"><?= Html::encode($this->title) ?></div>
+                <!--            --><?php //Pjax::begin(['id' => 'pjaxa']); ?>
+                <?php  echo $this->render('_second_search', ['model' => $searchModel]); ?>
+            </div>
         </div>
-        <p class="text-dark pl-4">
-            Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
-        </p>
+        <div class="row" style="font-size: 12px;">
+            <div class="col-8 text-dark pl-lg-5" style="vertical-align: center;">
+                Sahifadagi elementlar soni <?=$count?>, jami elementlar <?=$total_count?>
+            </div>
+            <div class="col-4">
+                <?= date("Y-m-d h:i:sa") ?>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body pt-0">
@@ -36,24 +42,30 @@ $this->params['breadcrumbs'][] = $this->title;
                         </thead>
                         <tbody>
                         <?php
-                        $count_dead_products = 0;
-                        $count_less_then_10 = 0;
-                        foreach ($all_items as $items):
-                            ?>
-                            <tr>
-                                <td><?=$items['product']['name']?></td>
-                                <td><?=$items['department']['name']?></td>
-                                <td><?=$items['quantity']?></td>
-                            </tr>
-                            <?php
-                                if($items['quantity'] === 0){
-                                    $count_dead_products++;
-                                }
-                                if($items['quantity'] < 10){
-                                    $count_less_then_10++;
-                                }
-                                endforeach;
-                            ?>
+                            $count_dead_products = 0;
+                            $count_less_then_10 = 0;
+                            $quantity = 0;
+                            foreach ($all_items as $items):
+                        ?>
+                                <tr>
+                                    <td><?=$items['product']['name']?></td>
+                                    <td><?=$items['department']['name']?></td>
+                                    <td><?=$items['quantity']?></td>
+                                </tr>
+                        <?php
+                            if($items['quantity'] === 0){
+                                $count_dead_products++;
+                            }
+                            if($items['quantity'] < 10){
+                                $count_less_then_10++;
+                            }
+                            $quantity += $items['quantity'];
+                            endforeach;
+                        ?>
+                        <tr>
+                            <td colspan="2"><b><?= Yii::t('app', 'Summary :') ?></b></td>
+                            <td colspan="1"><b><?= $quantity ?></b></td>
+                        </tr>
                         <tr>
                             <td colspan="3"><b>Tugagan mahsulotlar soni : <?=$count_dead_products?></b></td>
                         </tr>
@@ -68,3 +80,19 @@ $this->params['breadcrumbs'][] = $this->title;
         <!--        --><?php //Pjax::end(); ?>
     </div>
 </div>
+
+<?php
+$js = <<<JS
+        $('#printIt').click(function() {
+           $.fn.printInvoice();
+        });
+        $.fn.printInvoice = function (){
+             $('.items-does-not-print, #back-to-invoice, #save-and-finish, #edit-some-items, form#Received, button#printIt, footer.site-footer, aside.left-panel, div.clearfix, header#header').remove();
+             $('div.right-panel').removeAttr('id').removeClass('right-panel');
+             $('div.animated, div.card').removeAttr('id').removeAttr('class');
+             window.print();
+             location.reload();
+        }
+JS;
+$this->registerJs($js);
+?>

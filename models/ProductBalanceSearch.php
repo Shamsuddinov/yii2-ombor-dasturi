@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\ProductBalance;
@@ -26,6 +27,26 @@ class ProductBalanceSearch extends ProductBalance
             [['id', 'product_id', 'department_id', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at', 'from_amount', 'to_amount'], 'integer'],
             [['quantity', 'price'], 'number'],
             [['product_name', 'department_name', 'amount'], 'safe']
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'product_id' => Yii::t('app', 'Product'),
+            'product_name' => Yii::t('app', 'Product'),
+            'department_name' => Yii::t('app', 'Department'),
+            'quantity' => Yii::t('app', 'Quantity'),
+            'price' => Yii::t('app', 'Price'),
+            'department_id' => Yii::t('app', 'Department'),
+            'status' => Yii::t('app', 'Status'),
+            'from_amount' => Yii::t('app', 'From'),
+            'to_amount' => Yii::t('app', 'To'),
+            'created_by' => Yii::t('app', 'Created by'),
+            'created_at' => Yii::t('app', 'Created at'),
+            'updated_by' => Yii::t('app', 'Updated by'),
+            'updated_at' => Yii::t('app', 'Updated at'),
         ];
     }
 
@@ -81,14 +102,17 @@ class ProductBalanceSearch extends ProductBalance
                         'product_name' => [
                             'asc' => ['product.name' => SORT_ASC],
                             'desc' => ['product.name' => SORT_DESC],
+                            'label' => Yii::t('app', 'Product name')
                         ],
                         'department_name' => [
                             'asc' => ['department.name' => SORT_ASC],
                             'desc' => ['department.name' => SORT_DESC],
+                            'label' => Yii::t('app', 'Department name')
                         ],
                         'quantity' => [
                             'asc' => ['quantity' => SORT_ASC],
                             'desc' => ['quantity' => SORT_DESC],
+                            'label' => Yii::t('app', 'Quantity')
                         ],
                     ],
                 ]

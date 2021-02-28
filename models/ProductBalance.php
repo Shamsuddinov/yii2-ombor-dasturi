@@ -52,15 +52,15 @@ class ProductBalance extends \app\models\BaseModel
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'product_id' => Yii::t('app', 'Product ID'),
+            'product_id' => Yii::t('app', 'Product'),
             'quantity' => Yii::t('app', 'Quantity'),
             'price' => Yii::t('app', 'Price'),
-            'department_id' => Yii::t('app', 'Department ID'),
+            'department_id' => Yii::t('app', 'Department'),
             'status' => Yii::t('app', 'Status'),
-            'created_by' => Yii::t('app', 'Created By'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_by' => Yii::t('app', 'Updated By'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created by'),
+            'created_at' => Yii::t('app', 'Created at'),
+            'updated_by' => Yii::t('app', 'Updated by'),
+            'updated_at' => Yii::t('app', 'Updated at'),
         ];
     }
 

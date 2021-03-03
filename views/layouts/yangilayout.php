@@ -47,6 +47,13 @@ AppAsset::register($this);
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-folder-o"></i>Accounting</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-exchange"></i><a href="<?= Url::to(['transaction/'])?>">Transaction</a></li>
+                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['transaction-type/'])?>">Transaction types</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>Control panel</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-linux"></i><a href="<?= Url::to(['brand/'])?>">Edit brands</a></li>

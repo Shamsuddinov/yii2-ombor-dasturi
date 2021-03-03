@@ -5,15 +5,15 @@ namespace app\controllers;
 use Yii;
 use app\models\Transaction;
 use app\models\TransactionSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * TransactionController implements the CRUD actions for Transaction model.
  */
-class TransactionController extends Controller
+class TransactionController extends BaseController
 {
+    public $layout = 'yangilayout';
     /**
      * {@inheritdoc}
      */

@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ProductBalance */
+/* @var $model app\models\Transaction */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Product Balances'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Transactions'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -33,10 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $model,
                         'attributes' => [
                             'id',
-                            'product_id',
-                            'quantity',
-                            'price',
                             'department_id',
+                            'invoice_id',
+                            'details_id',
+                            'sum',
+                            'inventory',
+                            'type_id',
+                            'transaction_date',
                             'status',
                             'created_by',
                             'created_at',

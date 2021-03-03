@@ -3,11 +3,14 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ProductBalance */
+/* @var $model app\models\Transaction */
 
-$this->title = Yii::t('app', 'Create Product Balance');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Product Balances'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('app', 'Update Transaction: {name}', [
+    'name' => $model->id,
+]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Transactions'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="col-lg-12">
     <div class="card">

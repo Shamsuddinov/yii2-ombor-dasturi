@@ -4,17 +4,17 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\TransactionTypeSearch */
+/* @var $searchModel app\models\UserControlSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Transaction Types');
+$this->title = Yii::t('app', 'User Controls');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="col-lg-12">
     <div class="card">
         <div class="card-body">
             <div class="box-title"><?= Html::encode($this->title) ?></div>
-            <?= Html::a(Yii::t('app', 'Sell product'),  ['create'], ['class' => 'btn btn-success p-1',
+            <?= Html::a(Yii::t('app', 'User control'),  ['create'], ['class' => 'btn btn-success p-1',
                 'style' => 'font-size:12px;',
                 'title' => Yii::t('app', 'Create')
             ]) ?>
@@ -32,8 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'name',
-            'type',
+            'user_id',
+            'department_id',
+            'status',
+            'created_by',
+            //'created_at',
+            //'updated_by',
+            //'updated_at',
             [
                 'header' => 'Boshqarish',
                 'class' => 'yii\grid\ActionColumn',

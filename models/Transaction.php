@@ -42,9 +42,9 @@ class Transaction extends \app\models\BaseModel
     public function rules()
     {
         return [
-            [['department_id', 'sum', 'inventory'], 'required'],
+            [['department_id', 'sum', 'inventory', 'comment'], 'required'],
             [['department_id', 'invoice_id', 'details_id', 'sum', 'inventory', 'type_id', 'status', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            [['transaction_date'], 'safe'],
+            [['transaction_date', 'comment'], 'safe'],
             [['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             [['details_id'], 'exist', 'skipOnError' => true, 'targetClass' => Details::className(), 'targetAttribute' => ['details_id' => 'id']],
             [['invoice_id'], 'exist', 'skipOnError' => true, 'targetClass' => Invoice::className(), 'targetAttribute' => ['invoice_id' => 'id']],
@@ -64,6 +64,7 @@ class Transaction extends \app\models\BaseModel
             'details_id' => Yii::t('app', 'Details ID'),
             'sum' => Yii::t('app', 'Sum'),
             'inventory' => Yii::t('app', 'Inventory'),
+            'comment' => Yii::t('app', 'Comment'),
             'type_id' => Yii::t('app', 'Type ID'),
             'transaction_date' => Yii::t('app', 'Transaction Date'),
             'status' => Yii::t('app', 'Status'),

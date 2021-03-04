@@ -48,7 +48,7 @@ class m210302_174118_create_transaction_table extends Migration
             'department_id',
             '{{%department}}',
             'id',
-            'CASCADE'
+//            'CASCADE'
         );
 
         // creates index for column `invoice_id`
@@ -65,7 +65,7 @@ class m210302_174118_create_transaction_table extends Migration
             'invoice_id',
             '{{%invoice}}',
             'id',
-            'CASCADE'
+//            'CASCADE'
         );
 
         // creates index for column `details_id`
@@ -82,7 +82,7 @@ class m210302_174118_create_transaction_table extends Migration
             'details_id',
             '{{%details}}',
             'id',
-            'CASCADE'
+//            'CASCADE'
         );
 
         // creates index for column `type_id`
@@ -99,7 +99,7 @@ class m210302_174118_create_transaction_table extends Migration
             'type_id',
             '{{%transaction_type}}',
             'id',
-            'CASCADE'
+//            'CASCADE'
         );
     }
 

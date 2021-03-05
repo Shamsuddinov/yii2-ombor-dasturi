@@ -5,15 +5,15 @@ namespace app\controllers;
 use Yii;
 use app\models\ProductPrice;
 use app\models\ProductPriceSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * ProductPriceController implements the CRUD actions for ProductPrice model.
  */
-class ProductPriceController extends Controller
+class ProductPriceController extends BaseController
 {
+    public $layout = 'yangilayout';
     /**
      * {@inheritdoc}
      */

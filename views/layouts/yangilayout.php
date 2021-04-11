@@ -44,6 +44,7 @@ AppAsset::register($this);
                         <li><i class="fa fa-exchange"></i><a href="<?= Url::to(['details/'])?>">Received products</a></li>
                         <li><i class="fa fa-list"></i><a href="<?= Url::to(['sold/'])?>">Sell products</a></li>
                         <li><i class="fa fa-list"></i><a href="<?= Url::to(['invoice/'])?>">Invoice</a></li>
+                        <li><i class="fa fa-list"></i><a href="<?= Url::to(['product-price/'])?>">Product price</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">

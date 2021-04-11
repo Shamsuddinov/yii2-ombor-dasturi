@@ -322,7 +322,7 @@ class ReceivedController extends BaseController
         return $this->redirect(['index']);
     }
     public function actionKirim(){
-        if(Yii::$app->request->isPost){
+        if(Yii::$app->request->isPost){https://cdn.mos.cms.futurecdn.net/dXbexHnmybaqTTsYzo8caD-970-80.jpg.webp
             $array = [];
             if(count(Yii::$app->request->post()) > 0){
                 foreach (Yii::$app->request->post() as $arrayItem){
@@ -418,18 +418,18 @@ class ReceivedController extends BaseController
         $saved = false;
         try {
             foreach ($models as $key => $model){
-                if($product = ProductBalance::findOne([
-                    'product_id' => $model['product_id'],
-                    'department_id' => $details['department_id']
-                ])){
-                    $product->setAttributes([
-                        'quantity' => $product->quantity + $model['quantity'],
-                        'price' => $model['r_price'],
-                        'status' => $product::STATUS_ACTIVE
-                    ]);
-                    if($product->save()){
+//                if($product = ProductBalance::findOne([
+//                    'product_id' => $model['product_id'],
+//                    'department_id' => $details['department_id']
+//                ])){
+//                    $product->setAttributes([
+//                        'quantity' => $product->quantity + $model['quantity'],
+//                        'price' => $model['r_price'],
+//                        'status' => $product::STATUS_ACTIVE
+//                    ]);
+//                    if($product->save()){
                         $item = Received::findOne($model['id']);
-                        $item->setAttribute('status', Received::STATUS_INACTIVE);
+                        $item->setAttribute('status', Received::STATUS_PRICE_NOT_SPECIFIED);
                         if($item->save()){
                             if(count($models) - 1 === $key){
                                 $detail  = Details::findOne($id);
@@ -440,31 +440,31 @@ class ReceivedController extends BaseController
                                 }
                             }
                         }
-                    }
-                } else{
-                    $product = new ProductBalance();
-                    $product->setAttributes([
-                        'quantity' => $model['quantity'],
-                        'price' => $model['r_price'],
-                        'status' => $product::STATUS_ACTIVE,
-                        'product_id' => $model['product_id'],
-                        'department_id' => $details['department_id']
-                    ]);
-                    if($product->save()){
-                        $item = Received::findOne($model['id']);
-                        $item->setAttribute('status', Received::STATUS_INACTIVE);
-                        if($item->save()){
-                            if(count($models) - 1 === $key){
-                                $detail  = Details::findOne($id);
-                                $detail->setAttribute('status', Details::STATUS_INACTIVE);
-                                $detail->save();
-                                if($detail->save()){
-                                    $saved = true;
-                                }
-                            }
-                        }
-                    }
-                }
+//                    }
+//                } else{
+//                    $product = new ProductBalance();
+//                    $product->setAttributes([
+//                        'quantity' => $model['quantity'],
+//                        'price' => $model['r_price'],
+//                        'status' => $product::STATUS_ACTIVE,
+//                        'product_id' => $model['product_id'],
+//                        'department_id' => $details['department_id']
+//                    ]);
+//                    if($product->save()){
+//                        $item = Received::findOne($model['id']);
+//                        $item->setAttribute('status', Received::STATUS_INACTIVE);
+//                        if($item->save()){
+//                            if(count($models) - 1 === $key){
+//                                $detail  = Details::findOne($id);
+//                                $detail->setAttribute('status', Details::STATUS_INACTIVE);
+//                                $detail->save();
+//                                if($detail->save()){
+//                                    $saved = true;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
             }
             if($saved === true){
                 $session->setFlash('success' , $message);

@@ -31,6 +31,9 @@ class Received extends BaseModel
 
     /**
      * {@inheritdoc}
+     *
+     *
+     * 
      */
     public function rules()
     {

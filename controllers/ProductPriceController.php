@@ -37,6 +37,7 @@ class ProductPriceController extends BaseController
     {
         $searchModel = new ProductPriceSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        $model =
 
         return $this->render('index', [
             'searchModel' => $searchModel,

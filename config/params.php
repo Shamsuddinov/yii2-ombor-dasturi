@@ -7,6 +7,6 @@ return [
     'language' => [
         'en' => 'English',
         'ru' => 'Russian',
-        'uz' => 'Uzbek'
+        'city_uz' => 'Shahar nomi:'
     ]
 ];
